@@ -308,7 +308,7 @@ export default function Index() {
                       key={project.id}
                       type="button"
                       onClick={() => navigate(`/p/${project.id}`)}
-                      className="group rounded-xl border bg-card/40 hover:bg-card/70 transition-colors p-3 text-left"
+                      className="group cursor-pointer rounded-xl border bg-card/40 p-3 text-left transition-colors hover:bg-card/70"
                     >
                       <div className="flex items-center gap-3">
                         <div className="h-14 w-14 rounded-lg overflow-hidden border bg-muted/30 shrink-0">
