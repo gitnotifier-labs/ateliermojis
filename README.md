@@ -9,8 +9,12 @@ Turn images into slack emoji 🎨
 Run locally:
 
 ```bash
-npm install
-npm run dev
+corepack enable
+```
+
+```bash
+pnpm install
+pnpm dev
 ```
 
 Then open `http://localhost:8080`.
