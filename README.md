@@ -19,7 +19,7 @@ Then open `http://localhost:8080`.
 
 ## Features
 
-- **No upload**: your files stay on your machine.
+- **No upload**: your files stay on your machine 💻.
 - **Local-first**: processing happens in the browser.
 - **Built for Slack**: perfect for creating custom Slack emojis.
 
