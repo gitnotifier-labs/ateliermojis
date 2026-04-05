@@ -12,6 +12,7 @@ interface EmojiPreviewProps {
   processed: ProcessedImage;
   onReset: () => void;
   onAdjustCrop: () => void;
+  onNameChange?: (name: string) => void;
 }
 
 export function EmojiPreview({
@@ -20,13 +21,15 @@ export function EmojiPreview({
   processed,
   onReset,
   onAdjustCrop,
+  onNameChange,
 }: EmojiPreviewProps) {
   const defaultName = `${originalFile.name.replace(/\.[^.]+$/, "")}-emoji`;
   const [downloadName, setDownloadName] = useState(defaultName);
 
   useEffect(() => {
     setDownloadName(defaultName);
-  }, [defaultName]);
+    onNameChange?.(defaultName);
+  }, [defaultName, onNameChange]);
 
   const handleDownload = () => {
     const a = document.createElement("a");
@@ -104,7 +107,11 @@ export function EmojiPreview({
         </p>
         <Input
           value={downloadName}
-          onChange={(event) => setDownloadName(event.target.value)}
+          onChange={(event) => {
+            const nextName = event.target.value;
+            setDownloadName(nextName);
+            onNameChange?.(nextName);
+          }}
           maxLength={64}
           placeholder="emoji"
           className="text-sm"

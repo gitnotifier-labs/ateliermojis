@@ -17,12 +17,17 @@ export default function Index() {
   const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState("");
   const [processed, setProcessed] = useState<ProcessedImage | null>(null);
+  const [downloadName, setDownloadName] = useState("");
   const [step, setStep] = useState<"upload" | "crop" | "done">("upload");
   const [processing, setProcessing] = useState(false);
+
+  const getDefaultName = (name: string) =>
+    `${name.replace(/\.[^.]+$/, "")}-emoji`;
 
   const handleFile = async (f: File) => {
     setFile(f);
     setFileUrl(URL.createObjectURL(f));
+    setDownloadName(getDefaultName(f.name));
     setProcessed(null);
     setProcessing(true);
     try {
@@ -43,6 +48,7 @@ export default function Index() {
   const handleReset = () => {
     setFile(null);
     setFileUrl("");
+    setDownloadName("");
     setProcessed(null);
     setStep("upload");
   };
@@ -125,10 +131,12 @@ export default function Index() {
               processed={processed}
               onReset={handleReset}
               onAdjustCrop={() => setStep("crop")}
+              onNameChange={setDownloadName}
             />
             <AnimationSection
               processedUrl={processed.url}
               fileName={file.name}
+              downloadName={downloadName}
             />
           </>
         )}
