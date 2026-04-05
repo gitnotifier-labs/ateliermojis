@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Download, Check, ArrowRight, RotateCcw, Crop } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { formatBytes, type ProcessedImage } from "@/lib/imageProcessor";
 import { motion } from "framer-motion";
 
@@ -13,12 +15,19 @@ interface EmojiPreviewProps {
 }
 
 export function EmojiPreview({ originalFile, originalUrl, processed, onReset, onAdjustCrop }: EmojiPreviewProps) {
+  const defaultName = `${originalFile.name.replace(/\.[^.]+$/, "")}-emoji`;
+  const [downloadName, setDownloadName] = useState(defaultName);
+
+  useEffect(() => {
+    setDownloadName(defaultName);
+  }, [defaultName]);
+
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = processed.url;
     const ext = processed.blob.type === "image/png" ? "png" : "jpg";
-    const name = originalFile.name.replace(/\.[^.]+$/, "");
-    a.download = `${name}-emoji.${ext}`;
+    const cleanName = downloadName.trim().replace(/[/\\?%*:|"<>]/g, "") || "emoji";
+    a.download = `${cleanName}.${ext}`;
     a.click();
   };
 
@@ -60,6 +69,17 @@ export function EmojiPreview({ originalFile, originalUrl, processed, onReset, on
       <p className="text-sm text-muted-foreground">
         128×128px · {processed.blob.type === "image/png" ? "PNG" : "JPEG"}
       </p>
+
+      <div className="w-full max-w-sm">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">File name</p>
+        <Input
+          value={downloadName}
+          onChange={(event) => setDownloadName(event.target.value)}
+          maxLength={64}
+          placeholder="emoji"
+          className="text-sm"
+        />
+      </div>
 
       <div className="flex gap-3 flex-wrap justify-center">
         <Button variant="outline" onClick={onReset} className="gap-2">

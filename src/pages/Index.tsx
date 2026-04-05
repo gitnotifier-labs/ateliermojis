@@ -5,7 +5,7 @@ import { CropEditor } from "@/components/CropEditor";
 import { EmojiPreview } from "@/components/EmojiPreview";
 import { AnimationSection } from "@/components/AnimationSection";
 import { processImage, type ProcessedImage } from "@/lib/imageProcessor";
-import { Loader2 } from "lucide-react";
+import { Loader2, Github } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MAX_BYTES = 128 * 1024;
@@ -71,7 +71,18 @@ export default function Index() {
           </div>
           <span className="font-extrabold text-foreground text-lg">AtelierMojis</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <a
+            href="https://github.com/gitnotifier-labs/ateliermojis"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Open AtelierMojis on GitHub"
+          >
+            <Github className="h-4 w-4" />
+          </a>
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-6 pb-16 max-w-2xl mx-auto w-full">
@@ -113,7 +124,16 @@ export default function Index() {
       </main>
 
       <footer className="text-center py-6 text-xs text-muted-foreground">
-        All processing happens in your browser · Nothing is uploaded
+        All processing happens in your browser · Nothing is uploaded · {" "}
+        <a
+          href="https://gitnotifier.com/?utm_source=ateliermojis&utm_medium=referral&utm_campaign=project_footer"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          A Gitnotifier Labs project
+        </a>
+        {" "}· Made with ❤️ in France 🇫🇷
       </footer>
     </div>
   );
