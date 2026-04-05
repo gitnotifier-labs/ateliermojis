@@ -9,7 +9,7 @@ import {
   processImage,
   type ProcessedImage,
 } from "@/lib/imageProcessor";
-import { Loader2, Github } from "lucide-react";
+import { Loader2, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Index() {
@@ -68,7 +68,7 @@ export default function Index() {
             className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             aria-label="Open AtelierMojis on GitHub"
           >
-            <Github className="h-4 w-4" />
+            <Code2 className="h-4 w-4" />
           </a>
           <ThemeToggle />
         </div>
