@@ -1,0 +1,71 @@
+name: Dependabot Automerge
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+      - ready_for_review
+      - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  dependabot:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+
+      - name: Classify PR intent
+        id: classify
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request
+            const title = pr.title || ''
+            const body = pr.body || ''
+            const labels = (pr.labels || []).map((l) => String(l.name || '').toLowerCase())
+
+            const isSecurity =
+              labels.includes('security') ||
+              /\[security\]/i.test(title) ||
+              /security vulnerability/i.test(body) ||
+              /to resolve this vulnerability/i.test(body) ||
+              /severity\s*[:|-]?\s*(low|moderate|medium|high|critical)/i.test(body)
+
+            const isCritical =
+              /severity\s*[:|-]?\s*critical/i.test(body) ||
+              /cvss\s*(score)?\s*[:|-]?\s*(10(\.0+)?|9\.[0-9]+)/i.test(body)
+
+            core.setOutput('is_security', String(isSecurity))
+            core.setOutput('is_critical', String(isCritical))
+
+      - name: Close non-critical security PRs
+        if: steps.classify.outputs.is_security == 'true' && steps.classify.outputs.is_critical != 'true'
+        run: |
+          gh pr comment "$PR_URL" --body "Closing automatically: this repository auto-merges only **critical** security updates from Dependabot."
+          gh pr close "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for allowed Dependabot updates
+        if: |
+          steps.classify.outputs.is_security == 'true' && steps.classify.outputs.is_critical == 'true' ||
+          steps.classify.outputs.is_security != 'true' && (
+            steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+            steps.metadata.outputs.update-type == 'version-update:semver-minor'
+          )
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

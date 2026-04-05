@@ -4,6 +4,10 @@
 
 Turn images into slack emoji 🎨
 
+Live website: https://ateliermojis.gitnotifier.com/
+
+![AtelierMojis website screenshot](docs/images/website.png)
+
 ## Getting Started
 
 Run locally:
