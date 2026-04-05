@@ -23,7 +23,7 @@ export function EmojiPreview({
   onAdjustCrop,
   onNameChange,
 }: EmojiPreviewProps) {
-  const defaultName = `${originalFile.name.replace(/\.[^.]+$/, "")}-emoji`;
+  const defaultName = originalFile.name.replace(/\.[^.]+$/, "");
   const [downloadName, setDownloadName] = useState(defaultName);
 
   useEffect(() => {

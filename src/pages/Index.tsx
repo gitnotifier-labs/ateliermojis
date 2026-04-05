@@ -22,8 +22,7 @@ export default function Index() {
   const [step, setStep] = useState<"upload" | "crop" | "done">("upload");
   const [processing, setProcessing] = useState(false);
 
-  const getDefaultName = (name: string) =>
-    `${name.replace(/\.[^.]+$/, "")}-emoji`;
+  const getDefaultName = (name: string) => name.replace(/\.[^.]+$/, "");
 
   const handleFile = async (f: File) => {
     setFile(f);
