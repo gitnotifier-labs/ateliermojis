@@ -1,3 +1,5 @@
+import type { ProjectSettings, SavedCrop } from "@/lib/projectTypes";
+
 const TARGET_SIZE = 128;
 const MAX_BYTES = 128 * 1024; // 128KB
 
@@ -138,6 +140,97 @@ export async function canvasToProcessed(
 
   blob = bestBlob;
   return makeResult(blob, canvas.width, canvas.height);
+}
+
+export async function processImageWithProjectSettings(
+  file: File,
+  settings: Pick<ProjectSettings, "squareMode" | "landscapeAlign" | "crop">,
+): Promise<ProcessedImage> {
+  const img = await loadImage(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = TARGET_SIZE;
+  canvas.height = TARGET_SIZE;
+  const ctx = canvas.getContext("2d")!;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  if (settings.squareMode === "pad") {
+    const isLandscape = img.naturalWidth > img.naturalHeight;
+
+    if (isLandscape) {
+      const scaledHeight = (img.naturalHeight / img.naturalWidth) * TARGET_SIZE;
+      const y =
+        settings.landscapeAlign === "top"
+          ? 0
+          : settings.landscapeAlign === "bottom"
+            ? TARGET_SIZE - scaledHeight
+            : (TARGET_SIZE - scaledHeight) / 2;
+
+      ctx.drawImage(img, 0, y, TARGET_SIZE, scaledHeight);
+    } else {
+      const scaledWidth = (img.naturalWidth / img.naturalHeight) * TARGET_SIZE;
+      const x = (TARGET_SIZE - scaledWidth) / 2;
+      ctx.drawImage(img, x, 0, scaledWidth, TARGET_SIZE);
+    }
+
+    return canvasToProcessed(canvas);
+  }
+
+  const crop = normalizeCrop(
+    img.naturalWidth,
+    img.naturalHeight,
+    settings.crop,
+  );
+  ctx.drawImage(
+    img,
+    crop.x,
+    crop.y,
+    crop.width,
+    crop.height,
+    0,
+    0,
+    TARGET_SIZE,
+    TARGET_SIZE,
+  );
+
+  return canvasToProcessed(canvas);
+}
+
+function normalizeCrop(
+  naturalWidth: number,
+  naturalHeight: number,
+  crop?: SavedCrop,
+): { x: number; y: number; width: number; height: number } {
+  if (!crop) {
+    const size = Math.min(naturalWidth, naturalHeight);
+    return {
+      x: (naturalWidth - size) / 2,
+      y: (naturalHeight - size) / 2,
+      width: size,
+      height: size,
+    };
+  }
+
+  const x = (crop.x / 100) * naturalWidth;
+  const y = (crop.y / 100) * naturalHeight;
+  const width = (crop.width / 100) * naturalWidth;
+  const height = (crop.height / 100) * naturalHeight;
+
+  const boundedX = clamp(x, 0, naturalWidth - 1);
+  const boundedY = clamp(y, 0, naturalHeight - 1);
+  const boundedWidth = clamp(width, 1, naturalWidth - boundedX);
+  const boundedHeight = clamp(height, 1, naturalHeight - boundedY);
+
+  return {
+    x: boundedX,
+    y: boundedY,
+    width: boundedWidth,
+    height: boundedHeight,
+  };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }
 
 function canvasToBlob(

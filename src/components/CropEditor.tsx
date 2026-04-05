@@ -7,10 +7,25 @@ import ReactCrop, {
 import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/ui/button";
 import { Check, RotateCcw } from "lucide-react";
+import type {
+  EditorLandscapeAlign,
+  EditorSquareMode,
+  SavedCrop,
+} from "@/lib/projectTypes";
 
 interface CropEditorProps {
   imageUrl: string;
-  onCropComplete: (canvas: HTMLCanvasElement) => void;
+  initialMode: EditorSquareMode;
+  initialLandscapeAlign: EditorLandscapeAlign;
+  initialCrop?: SavedCrop;
+  onCropComplete: (
+    canvas: HTMLCanvasElement,
+    settings: {
+      squareMode: EditorSquareMode;
+      landscapeAlign: EditorLandscapeAlign;
+      crop?: SavedCrop;
+    },
+  ) => void;
   onBack: () => void;
 }
 
@@ -24,24 +39,27 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number) {
 
 export function CropEditor({
   imageUrl,
+  initialMode,
+  initialLandscapeAlign,
+  initialCrop,
   onCropComplete,
   onBack,
 }: CropEditorProps) {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [crop, setCrop] = useState<Crop>();
-  const [mode, setMode] = useState<"crop" | "pad">("crop");
-  const [landscapeAlign, setLandscapeAlign] = useState<
-    "top" | "center" | "bottom"
-  >("center");
+  const [crop, setCrop] = useState<Crop | undefined>(initialCrop);
+  const [mode, setMode] = useState<EditorSquareMode>(initialMode);
+  const [landscapeAlign, setLandscapeAlign] = useState<EditorLandscapeAlign>(
+    initialLandscapeAlign,
+  );
   const [isLandscape, setIsLandscape] = useState(false);
 
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { naturalWidth, naturalHeight } = e.currentTarget;
-      setCrop(centerAspectCrop(naturalWidth, naturalHeight));
+      setCrop(initialCrop ?? centerAspectCrop(naturalWidth, naturalHeight));
       setIsLandscape(naturalWidth > naturalHeight);
     },
-    [],
+    [initialCrop],
   );
 
   const handleConfirm = () => {
@@ -75,7 +93,10 @@ export function CropEditor({
         ctx.drawImage(img, x, 0, scaledWidth, 128);
       }
 
-      onCropComplete(canvas);
+      onCropComplete(canvas, {
+        squareMode: mode,
+        landscapeAlign,
+      });
       return;
     }
 
@@ -102,14 +123,36 @@ export function CropEditor({
       128,
       128,
     );
-    onCropComplete(canvas);
+    onCropComplete(canvas, {
+      squareMode: mode,
+      landscapeAlign,
+      crop: {
+        unit: "%",
+        x: crop.x,
+        y: crop.y,
+        width: crop.width,
+        height: crop.height,
+      },
+    });
   };
 
   const handleReset = () => {
     const img = imgRef.current;
     if (img) {
       setCrop(centerAspectCrop(img.naturalWidth, img.naturalHeight));
-      setMode("crop");
+      setMode(initialMode);
+      setLandscapeAlign(initialLandscapeAlign);
+      return;
+    }
+
+    setMode(initialMode);
+    setLandscapeAlign(initialLandscapeAlign);
+    setCrop(initialCrop);
+  };
+
+  const handleModeChange = (nextMode: EditorSquareMode) => {
+    setMode(nextMode);
+    if (nextMode === "pad") {
       setLandscapeAlign("center");
     }
   };
@@ -123,14 +166,14 @@ export function CropEditor({
         <Button
           size="sm"
           variant={mode === "crop" ? "default" : "outline"}
-          onClick={() => setMode("crop")}
+          onClick={() => handleModeChange("crop")}
         >
           Crop to fill
         </Button>
         <Button
           size="sm"
           variant={mode === "pad" ? "default" : "outline"}
-          onClick={() => setMode("pad")}
+          onClick={() => handleModeChange("pad")}
         >
           Transparent pad
         </Button>
