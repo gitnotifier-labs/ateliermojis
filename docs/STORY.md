@@ -60,6 +60,10 @@ I also generated a bunch of basic docs: `@CONTRIBUTING.md`, `@SECURITY.md`, and 
 
 Now I'm pretty happy with the current state and can go back to building features.
 
+### Deployment
+
+As this is static website generated once, Cloudflare was perfect for it. It honnestly took 1m to configure and deploy with the Cloudflare Github App.
+
 ## Features
 
 Super basic for now. Just using the Plan -> Build capabilities with opencode.
