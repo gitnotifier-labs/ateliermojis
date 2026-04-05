@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
