@@ -1,5 +1,3 @@
-
-
 # Slack Emoji Creator
 
 A single-page tool that lets users upload an image and instantly converts it to Slack-compatible emoji format (128×128px, ≤128KB, square).
@@ -36,4 +34,3 @@ A single-page tool that lets users upload an image and instantly converts it to 
 - All processing done client-side (no backend needed)
 - Canvas API for image manipulation
 - Shadcn UI components + Tailwind for styling
-
