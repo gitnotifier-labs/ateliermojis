@@ -49,7 +49,7 @@ export function ImageUploader({ onFileSelected }: ImageUploaderProps) {
         className="hidden"
         onChange={handleChange}
       />
-      <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slack-cyan via-slack-green to-slack-yellow">
+      <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br from-slack-cyan via-slack-green to-slack-yellow">
         {dragging ? (
           <Upload className="h-8 w-8 text-white" />
         ) : (

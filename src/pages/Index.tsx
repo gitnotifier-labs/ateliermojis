@@ -82,7 +82,7 @@ export default function Index() {
         >
           <h1 className="text-4xl sm:text-5xl font-black text-foreground leading-tight">
             Make any image a{" "}
-            <span className="bg-gradient-to-r from-slack-cyan via-slack-green to-slack-yellow bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-slack-cyan via-slack-green to-slack-yellow bg-clip-text text-transparent">
               Slack emoji
             </span>
           </h1>

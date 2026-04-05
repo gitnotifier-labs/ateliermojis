@@ -137,7 +137,7 @@ export function AnimationSection({
             onClick={() => setSelected(type)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all ${
               selected === type
-                ? "border-primary bg-primary/10 shadow-sm"
+                ? "border-primary bg-primary/10 shadow-xs"
                 : "bg-card/50 hover:bg-muted/50"
             }`}
           >
