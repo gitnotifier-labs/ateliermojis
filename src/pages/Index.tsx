@@ -75,7 +75,7 @@ export default function Index() {
             href="https://github.com/gitnotifier-labs/ateliermojis"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background text-foreground transition-colors hover:bg-accent"
             aria-label="Open AtelierMojis on GitHub"
           >
             <svg
