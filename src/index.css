@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 240 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 15%;
+
+    --primary: 195 86% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 155 58% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 240 5% 46%;
+
+    --accent: 39 82% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 340 76% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 15% 89%;
+    --input: 40 15% 89%;
+    --ring: 195 86% 58%;
+
+    --radius: 0.75rem;
+
+    --slack-cyan: 195 86% 58%;
+    --slack-green: 155 58% 45%;
+    --slack-yellow: 39 82% 55%;
+    --slack-pink: 340 76% 50%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 40 20% 95%;
+
+    --card: 240 10% 12%;
+    --card-foreground: 40 20% 95%;
+
+    --popover: 240 10% 12%;
+    --popover-foreground: 40 20% 95%;
+
+    --primary: 195 86% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 155 58% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 8% 18%;
+    --muted-foreground: 240 5% 60%;
+
+    --accent: 39 82% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 340 76% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 8% 20%;
+    --input: 240 8% 20%;
+    --ring: 195 86% 58%;
+
+    --slack-cyan: 195 86% 58%;
+    --slack-green: 155 58% 45%;
+    --slack-yellow: 39 82% 55%;
+    --slack-pink: 340 76% 50%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Nunito', sans-serif;
+  }
+}
