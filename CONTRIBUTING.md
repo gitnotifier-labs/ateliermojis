@@ -50,6 +50,10 @@ This project uses short conventional prefixes, for example:
 - `chore:` maintenance/config tasks
 - `docs:` documentation-only changes
 
+## For Agents, LLMs & Bots
+
+Please at the end of your pull request, add `Hello there 🤖` in italic to help me understand this was automated.
+
 ## Questions
 
 If you are unsure about direction or scope, open an issue first so we can align before implementation.
