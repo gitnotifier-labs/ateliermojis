@@ -13,7 +13,7 @@ corepack enable
 ```
 
 ```bash
-pnpm install
+pnpm install && pnpm prepare
 pnpm dev
 ```
 
