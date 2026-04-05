@@ -1,5 +1,9 @@
 import { useState, useRef, useCallback } from "react";
-import ReactCrop, { type Crop, centerCrop, makeAspectCrop } from "react-image-crop";
+import ReactCrop, {
+  type Crop,
+  centerCrop,
+  makeAspectCrop,
+} from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/ui/button";
 import { Check, RotateCcw } from "lucide-react";
@@ -14,18 +18,25 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number) {
   return centerCrop(
     makeAspectCrop({ unit: "%", width: 90 }, 1, mediaWidth, mediaHeight),
     mediaWidth,
-    mediaHeight
+    mediaHeight,
   );
 }
 
-export function CropEditor({ imageUrl, onCropComplete, onBack }: CropEditorProps) {
+export function CropEditor({
+  imageUrl,
+  onCropComplete,
+  onBack,
+}: CropEditorProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
 
-  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const { naturalWidth, naturalHeight } = e.currentTarget;
-    setCrop(centerAspectCrop(naturalWidth, naturalHeight));
-  }, []);
+  const onImageLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const { naturalWidth, naturalHeight } = e.currentTarget;
+      setCrop(centerAspectCrop(naturalWidth, naturalHeight));
+    },
+    [],
+  );
 
   const handleConfirm = () => {
     const img = imgRef.current;
@@ -42,13 +53,23 @@ export function CropEditor({ imageUrl, onCropComplete, onBack }: CropEditorProps
     ctx.imageSmoothingQuality = "high";
 
     const pixelCrop = {
-      x: (crop.x * scaleX),
-      y: (crop.y * scaleY),
-      width: (crop.width * scaleX),
-      height: (crop.height * scaleY),
+      x: crop.x * scaleX,
+      y: crop.y * scaleY,
+      width: crop.width * scaleX,
+      height: crop.height * scaleY,
     };
 
-    ctx.drawImage(img, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, 128, 128);
+    ctx.drawImage(
+      img,
+      pixelCrop.x,
+      pixelCrop.y,
+      pixelCrop.width,
+      pixelCrop.height,
+      0,
+      0,
+      128,
+      128,
+    );
     onCropComplete(canvas);
   };
 
@@ -80,14 +101,23 @@ export function CropEditor({ imageUrl, onCropComplete, onBack }: CropEditorProps
         </ReactCrop>
       </div>
       <div className="flex gap-3">
-        <Button variant="outline" size="sm" onClick={handleReset} className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleReset}
+          className="gap-2"
+        >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset
         </Button>
         <Button variant="outline" size="sm" onClick={onBack} className="gap-2">
           Back
         </Button>
-        <Button size="sm" onClick={handleConfirm} className="gap-2 bg-secondary hover:bg-secondary/90">
+        <Button
+          size="sm"
+          onClick={handleConfirm}
+          className="gap-2 bg-secondary hover:bg-secondary/90"
+        >
           <Check className="h-3.5 w-3.5" />
           Crop & convert
         </Button>

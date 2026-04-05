@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Zap, RotateCw, Move, Sparkles, Download, Loader2, ArrowLeft } from "lucide-react";
+import {
+  Zap,
+  RotateCw,
+  Move,
+  Sparkles,
+  Download,
+  Loader2,
+  ArrowLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatBytes } from "@/lib/imageProcessor";
@@ -10,7 +18,12 @@ import {
 } from "@/lib/gifEncoder";
 import { motion } from "framer-motion";
 
-const animations: { type: AnimationType; icon: typeof Zap; label: string; color: string }[] = [
+const animations: {
+  type: AnimationType;
+  icon: typeof Zap;
+  label: string;
+  color: string;
+}[] = [
   { type: "bounce", icon: Zap, label: "Bounce", color: "text-slack-cyan" },
   { type: "spin", icon: RotateCw, label: "Spin", color: "text-slack-green" },
   { type: "shake", icon: Move, label: "Shake", color: "text-slack-yellow" },
@@ -22,7 +35,10 @@ interface AnimationSectionProps {
   fileName: string;
 }
 
-export function AnimationSection({ processedUrl, fileName }: AnimationSectionProps) {
+export function AnimationSection({
+  processedUrl,
+  fileName,
+}: AnimationSectionProps) {
   const [selected, setSelected] = useState<AnimationType | null>(null);
   const [generating, setGenerating] = useState(false);
   const [gifBlob, setGifBlob] = useState<Blob | null>(null);
@@ -35,7 +51,9 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
   useEffect(() => {
     const img = new Image();
     img.src = processedUrl;
-    img.onload = () => { imgRef.current = img; };
+    img.onload = () => {
+      imgRef.current = img;
+    };
   }, [processedUrl]);
 
   // Animate canvas preview
@@ -51,7 +69,7 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
     const draw = (now: number) => {
       if (!running || !imgRef.current) return;
       const elapsed = (now - startTime) / 1000;
-      const t = (elapsed % 1);
+      const t = elapsed % 1;
       const { tx, ty, rotation, scale } = getAnimationTransform(selected, t);
 
       ctx.clearRect(0, 0, size, size);
@@ -105,8 +123,12 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
       animate={{ opacity: 1, y: 0 }}
       className="mt-10 text-center w-full"
     >
-      <h2 className="text-xl font-bold text-foreground mb-1">Animate your emoji</h2>
-      <p className="text-sm text-muted-foreground mb-5">Pick a style and generate a GIF</p>
+      <h2 className="text-xl font-bold text-foreground mb-1">
+        Animate your emoji
+      </h2>
+      <p className="text-sm text-muted-foreground mb-5">
+        Pick a style and generate a GIF
+      </p>
 
       <div className="flex flex-wrap justify-center gap-3 mb-6">
         {animations.map(({ type, icon: Icon, label, color }) => (
@@ -120,7 +142,9 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
             }`}
           >
             <Icon className={`h-4 w-4 ${color}`} />
-            <span className="text-sm font-semibold text-foreground">{label}</span>
+            <span className="text-sm font-semibold text-foreground">
+              {label}
+            </span>
           </button>
         ))}
       </div>
@@ -135,9 +159,16 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
           <div className="flex items-center gap-6 flex-wrap justify-center">
             {/* Live preview */}
             <div className="flex flex-col items-center gap-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Preview</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Preview
+              </p>
               <div className="w-24 h-24 rounded-xl border overflow-hidden flex items-center justify-center bg-muted/30">
-                <canvas ref={canvasRef} width={128} height={128} className="w-full h-full" />
+                <canvas
+                  ref={canvasRef}
+                  width={128}
+                  height={128}
+                  className="w-full h-full"
+                />
               </div>
             </div>
 
@@ -146,9 +177,15 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
               <>
                 <ArrowLeft className="h-5 w-5 text-muted-foreground hidden sm:block rotate-180" />
                 <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">GIF</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    GIF
+                  </p>
                   <div className="w-24 h-24 rounded-xl border overflow-hidden flex items-center justify-center bg-muted/30">
-                    <img src={gifUrl} alt="Animated GIF" className="w-full h-full" />
+                    <img
+                      src={gifUrl}
+                      alt="Animated GIF"
+                      className="w-full h-full"
+                    />
                   </div>
                   {gifBlob && (
                     <Badge variant="outline" className="text-xs">
@@ -175,7 +212,10 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
                 {generating ? "Generating…" : "Generate GIF"}
               </Button>
             ) : (
-              <Button onClick={handleDownload} className="gap-2 bg-secondary hover:bg-secondary/90">
+              <Button
+                onClick={handleDownload}
+                className="gap-2 bg-secondary hover:bg-secondary/90"
+              >
                 <Download className="h-4 w-4" />
                 Download GIF
               </Button>

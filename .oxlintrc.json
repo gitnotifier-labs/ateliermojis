@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["dist"],
+  "env": {
+    "browser": true
+  },
+  "plugins": ["typescript", "react"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off"
+  }
+}

@@ -1,14 +1,16 @@
 {
   "name": "ateliermojis",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.29.3",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "lint": "eslint .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -28,23 +30,20 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^22.19.17",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react-swc": "^4.3.0",
     "autoprefixer": "^10.4.27",
-    "eslint": "^9.39.4",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.26",
-    "globals": "^15.15.0",
     "jsdom": "^20.0.3",
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.0",
     "vite": "^6.4.1",
     "vitest": "^3.2.4"
-  }
+  },
+  "packageManager": "pnpm@10.29.3"
 }

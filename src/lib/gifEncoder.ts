@@ -6,7 +6,12 @@ const SIZE = 128;
 const FRAME_COUNT = 20;
 const FRAME_DELAY = 50; // ms per frame (20fps)
 
-type TransformFn = (t: number) => { tx: number; ty: number; rotation: number; scale: number };
+type TransformFn = (t: number) => {
+  tx: number;
+  ty: number;
+  rotation: number;
+  scale: number;
+};
 
 const transforms: Record<AnimationType, TransformFn> = {
   bounce: (t) => ({
@@ -41,7 +46,7 @@ export function getAnimationTransform(type: AnimationType, t: number) {
 
 export async function generateAnimatedGif(
   imageUrl: string,
-  animation: AnimationType
+  animation: AnimationType,
 ): Promise<Blob> {
   const img = await loadImg(imageUrl);
   const transformFn = transforms[animation];

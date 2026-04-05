@@ -37,7 +37,9 @@ export async function processImage(file: File): Promise<ProcessedImage> {
   return canvasToProcessed(canvas);
 }
 
-export async function canvasToProcessed(canvas: HTMLCanvasElement): Promise<ProcessedImage> {
+export async function canvasToProcessed(
+  canvas: HTMLCanvasElement,
+): Promise<ProcessedImage> {
   // Try PNG first
   let blob = await canvasToBlob(canvas, "image/png", 1);
   if (blob.size <= MAX_BYTES) {
@@ -57,7 +59,11 @@ export async function canvasToProcessed(canvas: HTMLCanvasElement): Promise<Proc
   return makeResult(blob);
 }
 
-function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number,
+): Promise<Blob> {
   return new Promise((resolve) => {
     canvas.toBlob((b) => resolve(b!), type, quality);
   });

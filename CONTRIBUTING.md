@@ -29,6 +29,8 @@ Thanks for your interest in contributing to AtelierMojis.
 - Run checks locally:
 
   ```bash
+  pnpm lint
+  pnpm fmt:check
   pnpm test
   pnpm build
   ```

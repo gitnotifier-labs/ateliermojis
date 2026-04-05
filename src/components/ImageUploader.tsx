@@ -18,7 +18,7 @@ export function ImageUploader({ onFileSelected }: ImageUploaderProps) {
         onFileSelected(file);
       }
     },
-    [onFileSelected]
+    [onFileSelected],
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
