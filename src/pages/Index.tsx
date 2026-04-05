@@ -4,26 +4,9 @@ import { ImageUploader } from "@/components/ImageUploader";
 import { CropEditor } from "@/components/CropEditor";
 import { EmojiPreview } from "@/components/EmojiPreview";
 import { AnimationSection } from "@/components/AnimationSection";
-import { processImage, type ProcessedImage } from "@/lib/imageProcessor";
+import { canvasToProcessed, processImage, type ProcessedImage } from "@/lib/imageProcessor";
 import { Loader2, Github } from "lucide-react";
 import { motion } from "framer-motion";
-
-const MAX_BYTES = 128 * 1024;
-
-async function canvasToProcessed(canvas: HTMLCanvasElement): Promise<ProcessedImage> {
-  const toBlob = (type: string, q: number) =>
-    new Promise<Blob>((res) => canvas.toBlob((b) => res(b!), type, q));
-
-  let blob = await toBlob("image/png", 1);
-  if (blob.size <= MAX_BYTES) {
-    return { blob, url: URL.createObjectURL(blob), width: 128, height: 128, sizeBytes: blob.size };
-  }
-  for (let q = 0.92; q >= 0.1; q -= 0.05) {
-    blob = await toBlob("image/jpeg", q);
-    if (blob.size <= MAX_BYTES) break;
-  }
-  return { blob, url: URL.createObjectURL(blob), width: 128, height: 128, sizeBytes: blob.size };
-}
 
 export default function Index() {
   const [file, setFile] = useState<File | null>(null);

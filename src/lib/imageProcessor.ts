@@ -34,6 +34,10 @@ export async function processImage(file: File): Promise<ProcessedImage> {
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(img, sx, sy, size, size, 0, 0, TARGET_SIZE, TARGET_SIZE);
 
+  return canvasToProcessed(canvas);
+}
+
+export async function canvasToProcessed(canvas: HTMLCanvasElement): Promise<ProcessedImage> {
   // Try PNG first
   let blob = await canvasToBlob(canvas, "image/png", 1);
   if (blob.size <= MAX_BYTES) {

@@ -46,7 +46,7 @@ export function AnimationSection({ processedUrl, fileName }: AnimationSectionPro
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d")!;
     const size = 128;
-    let startTime = performance.now();
+    const startTime = performance.now();
 
     const draw = (now: number) => {
       if (!running || !imgRef.current) return;

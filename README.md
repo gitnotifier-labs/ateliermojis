@@ -19,11 +19,17 @@ pnpm dev
 
 Then open `http://localhost:8080`.
 
-## Feats
+## Features
 
 - __No upload__: your files stay on your machine.
 - __Local-first__: processing happens in the browser.
 - __Built for Slack__: perfect for creating custom Slack emojis.
+
+## AI-driven development
+
+Except a few exceptions, this project was mostly generated using latest AI tooling: [Lovable](https://lovable.dev/), [Codex](https://chatgpt.com/codex/) & [opencode](https://opencode.ai/). I still had to manually go through some things like Github actions to generate a proper CI 😬 It's still not perfect,  but for UI and TS changes it's pretty crazy. 
+
+In this repo you'll find a collection of skills under `.agents` to let your agents be smarter with this repo tooling. As the project evolves, please feel free to update them :) 
 
 ## About
 
