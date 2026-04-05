@@ -27,6 +27,18 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      (() => {
+        const key = "ateliermojis-theme";
+        const stored = window.localStorage.getItem(key);
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const useDark =
+          stored === "dark" || (stored !== "light" && prefersDark);
+        document.documentElement.classList.toggle("dark", useDark);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
