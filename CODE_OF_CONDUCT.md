@@ -42,7 +42,7 @@ officially representing the project in public spaces.
 
 To report unacceptable behavior, please contact the maintainers at:
 
-- opensource@gitnotifier.com
+- contact+ateliermojis@gitnotifier.com
 
 All complaints will be reviewed and investigated promptly and fairly.
 

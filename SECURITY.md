@@ -10,7 +10,7 @@ Please do not open public GitHub issues for security vulnerabilities.
 
 Instead, report vulnerabilities privately by emailing:
 
-- opensource@gitnotifier.com
+- contact+ateliermojis@gitnotifier.com
 
 Please include:
 
