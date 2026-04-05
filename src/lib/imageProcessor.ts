@@ -109,16 +109,34 @@ export async function canvasToProcessed(
     return makeResult(blob, canvas.width, canvas.height);
   }
 
-  // Iteratively reduce JPEG quality
-  for (let q = 0.92; q >= 0.1; q -= 0.05) {
-    blob = await canvasToBlob(canvas, "image/jpeg", q);
+  // Find the highest JPEG quality that stays under 128KB.
+  const minQuality = 0.1;
+  let low = minQuality;
+  let high = 0.98;
+
+  const highBlob = await canvasToBlob(canvas, "image/jpeg", high);
+  if (highBlob.size <= MAX_BYTES) {
+    return makeResult(highBlob, canvas.width, canvas.height);
+  }
+
+  let bestBlob = await canvasToBlob(canvas, "image/jpeg", low);
+  if (bestBlob.size > MAX_BYTES) {
+    return makeResult(bestBlob, canvas.width, canvas.height);
+  }
+
+  for (let i = 0; i < 8; i += 1) {
+    const mid = (low + high) / 2;
+    blob = await canvasToBlob(canvas, "image/jpeg", mid);
+
     if (blob.size <= MAX_BYTES) {
-      return makeResult(blob, canvas.width, canvas.height);
+      bestBlob = blob;
+      low = mid;
+    } else {
+      high = mid;
     }
   }
 
-  // Worst case: lowest quality
-  blob = await canvasToBlob(canvas, "image/jpeg", 0.1);
+  blob = bestBlob;
   return makeResult(blob, canvas.width, canvas.height);
 }
 

@@ -1,16 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  Zap,
-  RotateCw,
-  Move,
-  Sparkles,
-  Download,
-  Loader2,
-  ArrowLeft,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatBytes } from "@/lib/imageProcessor";
+import { Zap, RotateCw, Move, Sparkles, Loader2 } from "lucide-react";
 import {
   type AnimationType,
   getAnimationTransform,
@@ -41,10 +30,9 @@ export function AnimationSection({
   fileName,
   downloadName,
 }: AnimationSectionProps) {
-  const [selected, setSelected] = useState<AnimationType>("spin");
-  const [generating, setGenerating] = useState(false);
-  const [gifBlob, setGifBlob] = useState<Blob | null>(null);
-  const [gifUrl, setGifUrl] = useState("");
+  const [generatingType, setGeneratingType] = useState<AnimationType | null>(
+    null,
+  );
   const canvasRefs = useRef<Record<AnimationType, HTMLCanvasElement | null>>({
     bounce: null,
     spin: null,
@@ -112,29 +100,19 @@ export function AnimationSection({
     };
   }, [processedUrl]);
 
-  // Reset GIF when animation changes
-  useEffect(() => {
-    setGifBlob(null);
-    setGifUrl("");
-  }, [selected]);
-
-  const handleGenerate = async () => {
-    setGenerating(true);
+  const handleDownloadForType = async (type: AnimationType) => {
+    setGeneratingType(type);
     try {
-      const blob = await generateAnimatedGif(processedUrl, selected);
-      setGifBlob(blob);
-      setGifUrl(URL.createObjectURL(blob));
+      const blob = await generateAnimatedGif(processedUrl, type);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${baseName}-${type}.gif`;
+      a.click();
+      URL.revokeObjectURL(url);
     } finally {
-      setGenerating(false);
+      setGeneratingType(null);
     }
-  };
-
-  const handleDownload = () => {
-    if (!gifUrl) return;
-    const a = document.createElement("a");
-    a.href = gifUrl;
-    a.download = `${baseName}-${selected}.gif`;
-    a.click();
   };
 
   return (
@@ -147,22 +125,31 @@ export function AnimationSection({
         Animate your emoji
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        Select one style for download.
+        Pick an effect and the GIF downloads instantly.
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 w-full max-w-3xl">
         {animations.map(({ type, icon: Icon, label, color }) => (
           <button
             key={type}
-            onClick={() => setSelected(type)}
+            onClick={() => {
+              void handleDownloadForType(type);
+            }}
+            disabled={generatingType !== null}
             className={`flex flex-col items-center gap-2 px-3 py-3 rounded-xl border transition-all ${
-              selected === type
-                ? "border-primary bg-primary/10 shadow-xs"
-                : "bg-card/50 hover:bg-muted/50"
+              generatingType === type
+                ? "border-primary bg-primary/10 shadow-xs cursor-progress"
+                : generatingType === null
+                  ? "bg-card/50 hover:bg-muted/50 cursor-pointer"
+                  : "bg-card/50 cursor-not-allowed"
             }`}
           >
             <span className="inline-flex items-center gap-2">
-              <Icon className={`h-4 w-4 ${color}`} />
+              {generatingType === type ? (
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              ) : (
+                <Icon className={`h-4 w-4 ${color}`} />
+              )}
               <span className="text-sm font-semibold text-foreground">
                 {label}
               </span>
@@ -179,73 +166,11 @@ export function AnimationSection({
             </div>
             <p className="text-[11px] text-muted-foreground">{`${baseName}-${type}`}</p>
             <span className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">
-              {selected === type ? "Selected" : "Preview"}
+              {generatingType === type ? "Downloading" : "Instant GIF"}
             </span>
           </button>
         ))}
       </div>
-
-      <motion.div
-        key={selected}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center gap-4"
-      >
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Selected output: {`${baseName}-${selected}.gif`}
-        </p>
-
-        <div className="flex items-center gap-6 flex-wrap justify-center">
-          {/* Generated GIF */}
-          {gifUrl && (
-            <>
-              <ArrowLeft className="h-5 w-5 text-muted-foreground hidden sm:block rotate-180" />
-              <div className="flex flex-col items-center gap-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  GIF
-                </p>
-                <div className="w-24 h-24 rounded-xl border overflow-hidden flex items-center justify-center bg-muted/30">
-                  <img
-                    src={gifUrl}
-                    alt="Animated GIF"
-                    className="w-full h-full"
-                  />
-                </div>
-                {gifBlob && (
-                  <Badge variant="outline" className="text-xs">
-                    {formatBytes(gifBlob.size)}
-                  </Badge>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="flex gap-3">
-          {!gifUrl ? (
-            <Button
-              onClick={handleGenerate}
-              disabled={generating}
-              className="gap-2 bg-secondary hover:bg-secondary/90"
-            >
-              {generating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Sparkles className="h-4 w-4" />
-              )}
-              {generating ? "Generating…" : `Generate ${selected} GIF`}
-            </Button>
-          ) : (
-            <Button
-              onClick={handleDownload}
-              className="gap-2 bg-secondary hover:bg-secondary/90"
-            >
-              <Download className="h-4 w-4" />
-              Download GIF
-            </Button>
-          )}
-        </div>
-      </motion.div>
     </motion.div>
   );
 }

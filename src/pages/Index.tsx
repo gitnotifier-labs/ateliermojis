@@ -4,6 +4,7 @@ import { ImageUploader } from "@/components/ImageUploader";
 import { CropEditor } from "@/components/CropEditor";
 import { EmojiPreview } from "@/components/EmojiPreview";
 import { AnimationSection } from "@/components/AnimationSection";
+import { CollectorSection } from "@/components/CollectorSection";
 import {
   canvasToProcessed,
   processImageWithOptions,
@@ -138,6 +139,11 @@ export default function Index() {
             />
             <AnimationSection
               processedUrl={processed.url}
+              fileName={file.name}
+              downloadName={downloadName}
+            />
+            <CollectorSection
+              sourceUrl={fileUrl}
               fileName={file.name}
               downloadName={downloadName}
             />
