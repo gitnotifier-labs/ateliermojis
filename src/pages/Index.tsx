@@ -9,8 +9,9 @@ import {
   processImage,
   type ProcessedImage,
 } from "@/lib/imageProcessor";
-import { Loader2, Code2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { siGithub } from "simple-icons";
 
 export default function Index() {
   const [file, setFile] = useState<File | null>(null);
@@ -68,7 +69,13 @@ export default function Index() {
             className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             aria-label="Open AtelierMojis on GitHub"
           >
-            <Code2 className="h-4 w-4" />
+            <svg
+              aria-hidden="true"
+              className="h-4 w-4 fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path d={siGithub.path} />
+            </svg>
           </a>
           <ThemeToggle />
         </div>
