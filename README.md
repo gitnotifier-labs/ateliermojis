@@ -29,6 +29,8 @@ Then open `http://localhost:8080`.
 
 Except a few exceptions, this project was mostly generated using latest AI tooling: [Lovable](https://lovable.dev/), [Codex](https://chatgpt.com/codex/) & [opencode](https://opencode.ai/). I still had to manually go through some things like Github actions to generate a proper CI 😬 It's still not perfect, but for UI and TS changes it's pretty crazy.
 
+Read the backstory in [`docs/STORY.md`](docs/STORY.md).
+
 In this repo you'll find a collection of skills under `.agents` to let your agents be smarter with this repo tooling. As the project evolves, please feel free to update them :)
 
 ## About
