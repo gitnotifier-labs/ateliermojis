@@ -98,7 +98,8 @@ export function EmojiPreview({
       </div>
 
       <p className="text-sm text-muted-foreground">
-        128×128px · {processed.blob.type === "image/png" ? "PNG" : "JPEG"}
+        {processed.width}×{processed.height}px ·{" "}
+        {processed.blob.type === "image/png" ? "PNG" : "JPEG"}
       </p>
 
       <div className="w-full max-w-sm">
@@ -125,7 +126,7 @@ export function EmojiPreview({
         </Button>
         <Button variant="outline" onClick={onAdjustCrop} className="gap-2">
           <Crop className="h-4 w-4" />
-          Adjust crop
+          Adjust square
         </Button>
         <Button
           onClick={handleDownload}

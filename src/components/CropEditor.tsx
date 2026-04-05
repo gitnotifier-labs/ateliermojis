@@ -29,21 +29,24 @@ export function CropEditor({
 }: CropEditorProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
+  const [mode, setMode] = useState<"crop" | "pad">("crop");
+  const [landscapeAlign, setLandscapeAlign] = useState<
+    "top" | "center" | "bottom"
+  >("center");
+  const [isLandscape, setIsLandscape] = useState(false);
 
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { naturalWidth, naturalHeight } = e.currentTarget;
       setCrop(centerAspectCrop(naturalWidth, naturalHeight));
+      setIsLandscape(naturalWidth > naturalHeight);
     },
     [],
   );
 
   const handleConfirm = () => {
     const img = imgRef.current;
-    if (!img || !crop) return;
-
-    const scaleX = img.naturalWidth / img.width;
-    const scaleY = img.naturalHeight / img.height;
+    if (!img) return;
 
     const canvas = document.createElement("canvas");
     canvas.width = 128;
@@ -51,6 +54,35 @@ export function CropEditor({
     const ctx = canvas.getContext("2d")!;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
+
+    if (mode === "pad") {
+      const isLandscapeImage = img.naturalWidth > img.naturalHeight;
+
+      if (isLandscapeImage) {
+        const scaledHeight = (img.naturalHeight / img.naturalWidth) * 128;
+        const y =
+          landscapeAlign === "top"
+            ? 0
+            : landscapeAlign === "bottom"
+              ? 128 - scaledHeight
+              : (128 - scaledHeight) / 2;
+
+        ctx.drawImage(img, 0, y, 128, scaledHeight);
+      } else {
+        const scaledWidth = (img.naturalWidth / img.naturalHeight) * 128;
+        const x = (128 - scaledWidth) / 2;
+
+        ctx.drawImage(img, x, 0, scaledWidth, 128);
+      }
+
+      onCropComplete(canvas);
+      return;
+    }
+
+    if (!crop) return;
+
+    const scaleX = img.naturalWidth / img.width;
+    const scaleY = img.naturalHeight / img.height;
 
     const pixelCrop = {
       x: crop.x * scaleX,
@@ -75,14 +107,66 @@ export function CropEditor({
 
   const handleReset = () => {
     const img = imgRef.current;
-    if (img) setCrop(centerAspectCrop(img.naturalWidth, img.naturalHeight));
+    if (img) {
+      setCrop(centerAspectCrop(img.naturalWidth, img.naturalHeight));
+      setMode("crop");
+      setLandscapeAlign("center");
+    }
   };
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-        Adjust crop area
+        Adjust square output
       </p>
+      <div className="flex gap-2 flex-wrap justify-center">
+        <Button
+          size="sm"
+          variant={mode === "crop" ? "default" : "outline"}
+          onClick={() => setMode("crop")}
+        >
+          Crop to fill
+        </Button>
+        <Button
+          size="sm"
+          variant={mode === "pad" ? "default" : "outline"}
+          onClick={() => setMode("pad")}
+        >
+          Transparent pad
+        </Button>
+      </div>
+
+      {mode === "pad" && isLandscape && (
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+            Vertical align
+          </p>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant={landscapeAlign === "top" ? "default" : "outline"}
+              onClick={() => setLandscapeAlign("top")}
+            >
+              Top
+            </Button>
+            <Button
+              size="sm"
+              variant={landscapeAlign === "center" ? "default" : "outline"}
+              onClick={() => setLandscapeAlign("center")}
+            >
+              Center
+            </Button>
+            <Button
+              size="sm"
+              variant={landscapeAlign === "bottom" ? "default" : "outline"}
+              onClick={() => setLandscapeAlign("bottom")}
+            >
+              Bottom
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-sm w-full rounded-xl overflow-hidden border bg-muted/30">
         <ReactCrop
           crop={crop}
@@ -90,6 +174,7 @@ export function CropEditor({
           aspect={1}
           circularCrop={false}
           className="max-w-full"
+          disabled={mode === "pad"}
         >
           <img
             ref={imgRef}
@@ -119,7 +204,7 @@ export function CropEditor({
           className="gap-2 bg-secondary hover:bg-secondary/90"
         >
           <Check className="h-3.5 w-3.5" />
-          Crop & convert
+          {mode === "crop" ? "Crop & convert" : "Pad & convert"}
         </Button>
       </div>
     </div>

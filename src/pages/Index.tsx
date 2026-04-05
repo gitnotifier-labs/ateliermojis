@@ -6,7 +6,7 @@ import { EmojiPreview } from "@/components/EmojiPreview";
 import { AnimationSection } from "@/components/AnimationSection";
 import {
   canvasToProcessed,
-  processImage,
+  processImageWithOptions,
   type ProcessedImage,
 } from "@/lib/imageProcessor";
 import { Loader2 } from "lucide-react";
@@ -31,7 +31,10 @@ export default function Index() {
     setProcessed(null);
     setProcessing(true);
     try {
-      const result = await processImage(f);
+      const result = await processImageWithOptions(f, {
+        squareMode: "pad",
+        landscapeVerticalAlign: "center",
+      });
       setProcessed(result);
       setStep("done");
     } finally {
@@ -100,7 +103,7 @@ export default function Index() {
             </span>
           </h1>
           <p className="text-muted-foreground mt-3 text-lg">
-            128×128px · Under 128KB · Ready to upload
+            Square output · Under 128KB target · Ready to upload
           </p>
         </motion.div>
 
