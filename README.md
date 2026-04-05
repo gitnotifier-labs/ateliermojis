@@ -2,7 +2,7 @@
 
 ![AtelierMojis logo](docs/images/logo.png)
 
-Small MVP to turn images into emoji-ready GIFs.
+Turn images into slack emoji 🎨
 
 ## Getting Started
 
@@ -13,13 +13,13 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:5173`.
+Then open `http://localhost:8080`.
 
 ## Feats
 
-- No upload: your files stay on your machine.
-- Local-first: processing happens in the browser.
-- Built for Slack: perfect for creating custom Slack emojis.
+- __No upload__: your files stay on your machine.
+- __Local-first__: processing happens in the browser.
+- __Built for Slack__: perfect for creating custom Slack emojis.
 
 ## About
 
