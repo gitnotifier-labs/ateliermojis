@@ -28,3 +28,15 @@ Then open `http://localhost:8080`.
 ## About
 
 A Gitnotifier Labs project: [gitnotifier.com](https://www.gitnotifier.com/?utm_source=github&utm_medium=readme&utm_campaign=ateliermojis)
+
+## Contributing
+
+See `CONTRIBUTING.md` for development workflow and pull request guidelines.
+
+## Security
+
+See `SECURITY.md` for responsible vulnerability disclosure.
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE`.
