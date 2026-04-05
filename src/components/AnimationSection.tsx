@@ -147,7 +147,7 @@ export function AnimationSection({
         Animate your emoji
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        All previews are live. Select one style for download.
+        Select one style for download.
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 w-full max-w-3xl">

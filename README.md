@@ -6,15 +6,9 @@ Turn images into slack emoji 🎨
 
 Live website: https://ateliermojis.gitnotifier.com/
 
-![AtelierMojis website screenshot](docs/images/website.png)
-
 ## Getting Started
 
 Run locally:
-
-```bash
-corepack enable
-```
 
 ```bash
 pnpm install && pnpm prepare
@@ -39,7 +33,7 @@ In this repo you'll find a collection of skills under `.agents` to let your agen
 
 ## About
 
-A Gitnotifier Labs project: [gitnotifier.com](https://www.gitnotifier.com/?utm_source=github&utm_medium=readme&utm_campaign=ateliermojis)
+A Gitnotifier Labs project. If you want the best Github PR notifications in slack, check out [gitnotifier.com](https://www.gitnotifier.com/?utm_source=github&utm_medium=readme&utm_campaign=ateliermojis)
 
 ## Contributing
 
