@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { siGithub } from "simple-icons";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -16,6 +16,7 @@ import {
 } from "@/lib/imageProcessor";
 import {
   createProjectFromFile,
+  deleteProject,
   loadProject,
   loadRecentProjectsWithBlob,
   touchProject,
@@ -223,6 +224,15 @@ export default function Index() {
     });
   };
 
+  const handleDeleteRecentProject = async (id: string) => {
+    await deleteProject(id);
+    await refreshRecentProjects();
+
+    if (projectId === id) {
+      navigate("/", { replace: true });
+    }
+  };
+
   const handleOpenCrop = async () => {
     setStep("crop");
     await updateCurrentProjectSettings({ step: "crop" });
@@ -304,34 +314,48 @@ export default function Index() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {recentProjects.map((project) => (
-                    <button
+                    <div
                       key={project.id}
-                      type="button"
-                      onClick={() => navigate(`/p/${project.id}`)}
-                      className="group cursor-pointer rounded-xl border bg-card/40 p-3 text-left transition-colors hover:bg-card/70"
+                      className="group relative rounded-xl border bg-card/40 transition-colors hover:bg-card/70"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="h-14 w-14 rounded-lg overflow-hidden border bg-muted/30 shrink-0">
-                          <img
-                            src={project.previewUrl}
-                            alt={project.fileName}
-                            className="h-full w-full object-cover"
-                          />
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/p/${project.id}`)}
+                        className="w-full cursor-pointer rounded-xl p-3 pr-10 text-left"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-14 w-14 rounded-lg overflow-hidden border bg-muted/30 shrink-0">
+                            <img
+                              src={project.previewUrl}
+                              alt={project.fileName}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">
+                              {project.downloadName ||
+                                getDefaultName(project.fileName)}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {project.fileName}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground mt-1">
+                              {formatUpdatedAt(project.updatedAt)}
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-foreground truncate">
-                            {project.downloadName ||
-                              getDefaultName(project.fileName)}
-                          </p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {project.fileName}
-                          </p>
-                          <p className="text-[11px] text-muted-foreground mt-1">
-                            {formatUpdatedAt(project.updatedAt)}
-                          </p>
-                        </div>
-                      </div>
-                    </button>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          void handleDeleteRecentProject(project.id)
+                        }
+                        className="absolute top-2 right-2 inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                        aria-label={`Delete recent project ${project.fileName}`}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   ))}
                 </div>
               </section>

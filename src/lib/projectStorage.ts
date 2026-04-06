@@ -262,6 +262,12 @@ export async function touchProject(projectId: string): Promise<void> {
   upsertRecord(updated);
 }
 
+export async function deleteProject(projectId: string): Promise<void> {
+  const nextRecords = readRecords().filter((item) => item.id !== projectId);
+  writeRecords(nextRecords);
+  await deleteOriginalBlob(projectId);
+}
+
 export function listRecentProjectRecords(
   limit = MAX_RECENT_PROJECTS,
 ): ProjectRecord[] {
