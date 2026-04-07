@@ -153,6 +153,18 @@ export function CollectorSection({
           </span>
         </button>
       </div>
+      <p className="mx-auto max-w-2xl mt-8 text-xs text-muted-foreground text-center">
+        One animation is missing? Wanna add this cool new gif? <br />
+        <a
+          href="https://github.com/gitnotifier-labs/ateliermojis"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          This is open-source, feel free to open a pull request on GitHub
+        </a>
+        .
+      </p>
     </motion.div>
   );
 }
