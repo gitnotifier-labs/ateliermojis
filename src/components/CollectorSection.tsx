@@ -101,7 +101,7 @@ export function CollectorSection({
           type="button"
           onClick={handleDownload}
           disabled={generating || !collectorUrl}
-          className={`flex flex-col items-center gap-2 px-3 py-3 rounded-xl border transition-all text-left ${
+          className={`mx-auto w-full flex flex-col items-center gap-2 px-3 py-3 rounded-xl border transition-all text-left ${
             collectorUrl
               ? "border-primary bg-primary/10 shadow-xs hover:bg-primary/15"
               : "bg-card/50"
