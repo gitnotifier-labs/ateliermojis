@@ -26,13 +26,13 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-image-crop": "^11.0.10",
-    "react-router": "^7.14.1",
+    "react-router": "^7.14.2",
     "simple-icons": "^16.17.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.3",
+    "@tailwindcss/postcss": "^4.2.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
@@ -44,10 +44,10 @@
     "oxfmt": "^0.46.0",
     "oxlint": "^1.61.0",
     "postcss": "^8.5.10",
-    "tailwindcss": "^4.2.3",
+    "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "vite": "^8.0.9",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.5"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,json5,css,scss,less,md,mdx,html,yml,yaml,toml,gql,graphql}": "oxfmt --no-error-on-unmatched-pattern"
