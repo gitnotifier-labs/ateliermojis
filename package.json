@@ -22,11 +22,11 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
     "gifenc": "^1.0.3",
-    "lucide-react": "^1.18.0",
+    "lucide-react": "^1.20.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-image-crop": "^11.0.10",
-    "react-router": "^7.17.0",
+    "react-router": "^7.18.0",
     "simple-icons": "^16.23.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
