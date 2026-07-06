@@ -27,7 +27,7 @@
     "react-dom": "^19.2.7",
     "react-image-crop": "^11.1.2",
     "react-router": "^7.18.1",
-    "simple-icons": "^16.24.1",
+    "simple-icons": "^16.25.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -47,7 +47,7 @@
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3",
     "vite": "^8.1.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,json5,css,scss,less,md,mdx,html,yml,yaml,toml,gql,graphql}": "oxfmt --no-error-on-unmatched-pattern"
