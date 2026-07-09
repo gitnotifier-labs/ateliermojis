@@ -69,7 +69,7 @@ export function AnimationSection({
   });
   const animFrameRef = useRef<number>(0);
   const imgRef = useRef<HTMLImageElement | null>(null);
-  const optionsRef = useRef<AnimationOptions>({ fps, intensity });
+  const optionsRef = useRef<AnimationOptions>({ fps: DEFAULT_FPS, intensity });
 
   // Keep optionsRef in sync without restarting the RAF loop
   useEffect(() => {
