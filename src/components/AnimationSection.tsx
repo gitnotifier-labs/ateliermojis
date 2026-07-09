@@ -213,11 +213,11 @@ export function AnimationSection({
       </div>
 
       {/* Collapsible options */}
-      <div className="mx-auto mt-2 mb-6 w-full max-w-sm text-left">
+      <div className="mx-auto mt-2 mb-6 w-full max-w-sm text-center">
         <button
           type="button"
           onClick={() => setShowOptions((v) => !v)}
-          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors cursor-pointer"
         >
           <ChevronDown
             className={`h-3.5 w-3.5 transition-transform ${showOptions ? "rotate-180" : ""}`}
