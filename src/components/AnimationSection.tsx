@@ -167,44 +167,8 @@ export function AnimationSection({
         Pick an effect and the GIF downloads instantly.
       </p>
 
-      {/* Collapsible options */}
-      <div className="mx-auto mb-6 w-full max-w-sm text-left">
-        <button
-          type="button"
-          onClick={() => setShowOptions((v) => !v)}
-          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors cursor-pointer"
-        >
-          <ChevronDown
-            className={`h-3.5 w-3.5 transition-transform ${showOptions ? "rotate-180" : ""}`}
-          />
-          More options
-        </button>
-
-        {showOptions && (
-          <div className="mt-3 rounded-xl border bg-card/50 px-5 py-4 flex flex-col gap-1.5">
-            <div className="flex justify-between items-center">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Intensity
-              </label>
-              <span className="text-xs text-muted-foreground tabular-nums">
-                {intensity.toFixed(1)}×
-              </span>
-            </div>
-            <input
-              type="range"
-              min={0.1}
-              max={2}
-              step={0.1}
-              value={intensity}
-              onChange={(e) => setIntensity(Number(e.target.value))}
-              className="w-full accent-primary cursor-pointer"
-            />
-          </div>
-        )}
-      </div>
-
       {/* Animation grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4 w-full">
         {animations.map(({ type, icon: Icon, label, color }) => (
           <button
             key={type}
@@ -246,6 +210,42 @@ export function AnimationSection({
             </span>
           </button>
         ))}
+      </div>
+
+      {/* Collapsible options */}
+      <div className="mx-auto mt-2 mb-6 w-full max-w-sm text-left">
+        <button
+          type="button"
+          onClick={() => setShowOptions((v) => !v)}
+          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors cursor-pointer"
+        >
+          <ChevronDown
+            className={`h-3.5 w-3.5 transition-transform ${showOptions ? "rotate-180" : ""}`}
+          />
+          More options
+        </button>
+
+        {showOptions && (
+          <div className="mt-3 rounded-xl border bg-card/50 px-5 py-4 flex flex-col gap-1.5">
+            <div className="flex justify-between items-center">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Intensity
+              </label>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {intensity.toFixed(1)}×
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0.1}
+              max={2}
+              step={0.1}
+              value={intensity}
+              onChange={(e) => setIntensity(Number(e.target.value))}
+              className="w-full accent-primary cursor-pointer"
+            />
+          </div>
+        )}
       </div>
     </motion.div>
   );
