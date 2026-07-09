@@ -1,7 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { Zap, RotateCw, Move, Sparkles, Loader2 } from "lucide-react";
+import {
+  Zap,
+  RotateCw,
+  Move,
+  Sparkles,
+  Waves,
+  ZoomIn,
+  ArrowLeftRight,
+  Loader2,
+} from "lucide-react";
 import {
   type AnimationType,
+  type AnimationOptions,
   getAnimationTransform,
   generateAnimatedGif,
 } from "@/lib/gifEncoder";
@@ -17,6 +27,14 @@ const animations: {
   { type: "spin", icon: RotateCw, label: "Spin", color: "text-slack-green" },
   { type: "shake", icon: Move, label: "Shake", color: "text-slack-yellow" },
   { type: "pulse", icon: Sparkles, label: "Pulse", color: "text-slack-pink" },
+  { type: "wobble", icon: Waves, label: "Wobble", color: "text-slack-cyan" },
+  { type: "zoom", icon: ZoomIn, label: "Zoom", color: "text-slack-green" },
+  {
+    type: "slide",
+    icon: ArrowLeftRight,
+    label: "Slide",
+    color: "text-slack-yellow",
+  },
 ];
 
 interface AnimationSectionProps {
@@ -24,6 +42,9 @@ interface AnimationSectionProps {
   fileName: string;
   downloadName: string;
 }
+
+const DEFAULT_FPS = 20;
+const DEFAULT_INTENSITY = 1;
 
 export function AnimationSection({
   processedUrl,
@@ -33,19 +54,32 @@ export function AnimationSection({
   const [generatingType, setGeneratingType] = useState<AnimationType | null>(
     null,
   );
+  const [fps, setFps] = useState(DEFAULT_FPS);
+  const [intensity, setIntensity] = useState(DEFAULT_INTENSITY);
+
   const canvasRefs = useRef<Record<AnimationType, HTMLCanvasElement | null>>({
     bounce: null,
     spin: null,
     shake: null,
     pulse: null,
+    wobble: null,
+    zoom: null,
+    slide: null,
   });
   const animFrameRef = useRef<number>(0);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const optionsRef = useRef<AnimationOptions>({ fps, intensity });
+
+  // Keep optionsRef in sync without restarting the RAF loop
+  useEffect(() => {
+    optionsRef.current = { fps, intensity };
+  }, [fps, intensity]);
+
   const fallbackBaseName = fileName.replace(/\.[^.]+$/, "");
   const baseName =
     downloadName.trim().replace(/[/\\?%*:|"<>]/g, "") || fallbackBaseName;
 
-  // Load image once
+  // Load image once when processedUrl changes
   useEffect(() => {
     const img = new Image();
     img.src = processedUrl;
@@ -54,7 +88,7 @@ export function AnimationSection({
     };
   }, [processedUrl]);
 
-  // Animate all canvas previews
+  // Single RAF loop animating all canvases
   useEffect(() => {
     const hasCanvas = animations.some(
       ({ type }) => canvasRefs.current[type] !== null,
@@ -71,6 +105,7 @@ export function AnimationSection({
       if (imgRef.current) {
         const elapsed = (now - startTime) / 1000;
         const t = elapsed % 1;
+        const { intensity: k } = optionsRef.current;
 
         for (const { type } of animations) {
           const canvas = canvasRefs.current[type];
@@ -78,7 +113,7 @@ export function AnimationSection({
           const ctx = canvas.getContext("2d");
           if (!ctx) continue;
 
-          const { tx, ty, rotation, scale } = getAnimationTransform(type, t);
+          const { tx, ty, rotation, scale } = getAnimationTransform(type, t, k);
 
           ctx.clearRect(0, 0, size, size);
           ctx.save();
@@ -103,7 +138,10 @@ export function AnimationSection({
   const handleDownloadForType = async (type: AnimationType) => {
     setGeneratingType(type);
     try {
-      const blob = await generateAnimatedGif(processedUrl, type);
+      const blob = await generateAnimatedGif(processedUrl, type, {
+        fps,
+        intensity,
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -128,7 +166,51 @@ export function AnimationSection({
         Pick an effect and the GIF downloads instantly.
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 w-full max-w-3xl">
+      {/* Controls */}
+      <div className="mx-auto mb-6 w-full max-w-sm flex flex-col gap-4 rounded-xl border bg-card/50 px-5 py-4 text-left">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex justify-between items-center">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Speed
+            </label>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {fps} fps
+            </span>
+          </div>
+          <input
+            type="range"
+            min={4}
+            max={30}
+            step={1}
+            value={fps}
+            onChange={(e) => setFps(Number(e.target.value))}
+            className="w-full accent-primary cursor-pointer"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <div className="flex justify-between items-center">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Intensity
+            </label>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {intensity.toFixed(1)}×
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0.1}
+            max={2}
+            step={0.1}
+            value={intensity}
+            onChange={(e) => setIntensity(Number(e.target.value))}
+            className="w-full accent-primary cursor-pointer"
+          />
+        </div>
+      </div>
+
+      {/* Animation grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 w-full">
         {animations.map(({ type, icon: Icon, label, color }) => (
           <button
             key={type}
