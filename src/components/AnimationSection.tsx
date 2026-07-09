@@ -8,6 +8,7 @@ import {
   ZoomIn,
   ArrowLeftRight,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
 import {
   type AnimationType,
@@ -54,8 +55,8 @@ export function AnimationSection({
   const [generatingType, setGeneratingType] = useState<AnimationType | null>(
     null,
   );
-  const [fps, setFps] = useState(DEFAULT_FPS);
   const [intensity, setIntensity] = useState(DEFAULT_INTENSITY);
+  const [showOptions, setShowOptions] = useState(false);
 
   const canvasRefs = useRef<Record<AnimationType, HTMLCanvasElement | null>>({
     bounce: null,
@@ -72,8 +73,8 @@ export function AnimationSection({
 
   // Keep optionsRef in sync without restarting the RAF loop
   useEffect(() => {
-    optionsRef.current = { fps, intensity };
-  }, [fps, intensity]);
+    optionsRef.current = { fps: DEFAULT_FPS, intensity };
+  }, [intensity]);
 
   const fallbackBaseName = fileName.replace(/\.[^.]+$/, "");
   const baseName =
@@ -139,7 +140,7 @@ export function AnimationSection({
     setGeneratingType(type);
     try {
       const blob = await generateAnimatedGif(processedUrl, type, {
-        fps,
+        fps: DEFAULT_FPS,
         intensity,
       });
       const url = URL.createObjectURL(blob);
@@ -166,47 +167,40 @@ export function AnimationSection({
         Pick an effect and the GIF downloads instantly.
       </p>
 
-      {/* Controls */}
-      <div className="mx-auto mb-6 w-full max-w-sm flex flex-col gap-4 rounded-xl border bg-card/50 px-5 py-4 text-left">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex justify-between items-center">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Speed
-            </label>
-            <span className="text-xs text-muted-foreground tabular-nums">
-              {fps} fps
-            </span>
-          </div>
-          <input
-            type="range"
-            min={4}
-            max={30}
-            step={1}
-            value={fps}
-            onChange={(e) => setFps(Number(e.target.value))}
-            className="w-full accent-primary cursor-pointer"
+      {/* Collapsible options */}
+      <div className="mx-auto mb-6 w-full max-w-sm text-left">
+        <button
+          type="button"
+          onClick={() => setShowOptions((v) => !v)}
+          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors cursor-pointer"
+        >
+          <ChevronDown
+            className={`h-3.5 w-3.5 transition-transform ${showOptions ? "rotate-180" : ""}`}
           />
-        </div>
+          More options
+        </button>
 
-        <div className="flex flex-col gap-1.5">
-          <div className="flex justify-between items-center">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Intensity
-            </label>
-            <span className="text-xs text-muted-foreground tabular-nums">
-              {intensity.toFixed(1)}×
-            </span>
+        {showOptions && (
+          <div className="mt-3 rounded-xl border bg-card/50 px-5 py-4 flex flex-col gap-1.5">
+            <div className="flex justify-between items-center">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Intensity
+              </label>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {intensity.toFixed(1)}×
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0.1}
+              max={2}
+              step={0.1}
+              value={intensity}
+              onChange={(e) => setIntensity(Number(e.target.value))}
+              className="w-full accent-primary cursor-pointer"
+            />
           </div>
-          <input
-            type="range"
-            min={0.1}
-            max={2}
-            step={0.1}
-            value={intensity}
-            onChange={(e) => setIntensity(Number(e.target.value))}
-            className="w-full accent-primary cursor-pointer"
-          />
-        </div>
+        )}
       </div>
 
       {/* Animation grid */}
