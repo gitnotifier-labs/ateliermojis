@@ -1,3 +1,5 @@
+import type { CollectorTemplate } from "@/lib/collectorTemplates";
+
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -21,11 +23,11 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 
 export async function generateCollectorEmoji(
   sourceUrl: string,
-  templateUrl: string,
+  template: CollectorTemplate,
 ): Promise<Blob> {
   const [emojiImage, templateImage] = await Promise.all([
     loadImage(sourceUrl),
-    loadImage(templateUrl),
+    loadImage(template.url),
   ]);
 
   const canvas = document.createElement("canvas");
@@ -40,20 +42,25 @@ export async function generateCollectorEmoji(
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
+  // Draw the template as the base
   ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
-  const overlayWidth = canvas.width / 3;
-  const overlayHeight = overlayWidth;
+  // Compute the pixel overlay box from fractional coordinates
+  const boxX = template.overlay.x * canvas.width;
+  const boxY = template.overlay.y * canvas.height;
+  const boxW = template.overlay.width * canvas.width;
+  const boxH = template.overlay.height * canvas.height;
 
-  const scale = Math.min(
-    overlayWidth / emojiImage.width,
-    overlayHeight / emojiImage.height,
-    1,
-  );
+  // Aspect-preserve fit (object-contain) inside the overlay box
+  const scale = Math.min(boxW / emojiImage.width, boxH / emojiImage.height);
   const drawWidth = emojiImage.width * scale;
   const drawHeight = emojiImage.height * scale;
 
-  ctx.drawImage(emojiImage, 0, 0, drawWidth, drawHeight);
+  // Centre the emoji within the box
+  const drawX = boxX + (boxW - drawWidth) / 2;
+  const drawY = boxY + (boxH - drawHeight) / 2;
+
+  ctx.drawImage(emojiImage, drawX, drawY, drawWidth, drawHeight);
 
   return canvasToBlob(canvas);
 }
