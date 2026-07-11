@@ -1,0 +1,33 @@
+# AtelierMojis
+
+> Turn any image into a Slack-ready custom emoji — entirely in your browser. No uploads, no servers, no accounts.
+
+AtelierMojis is a free, open-source, local-first Slack emoji creator built by the [Gitnotifier](https://gitnotifier.com/) team. All image processing happens client-side, meaning your files never leave your machine.
+
+## What it does
+
+- Converts any PNG, JPG, or WEBP image into a Slack-compatible emoji (128×128 px, under 128 KB).
+- Supports three framing modes: pad with transparency, crop to fill, and manual drag-to-crop.
+- Generates animated GIFs with 7 built-in animation types: bounce, spin, shake, pulse, wobble, zoom, and slide.
+- Includes a Collector feature: overlay your emoji onto popular meme/template images.
+- Persists recent projects locally using IndexedDB and localStorage — no account required.
+- Light and dark theme support.
+
+## Technology
+
+- React 18 + TypeScript, bundled with Vite.
+- Tailwind CSS + Framer Motion for UI and animations.
+- GIF encoding via the `gifenc` library on a Canvas pipeline.
+- Deployed as a static site on Cloudflare Pages.
+
+## Links
+
+- Live app: https://ateliermojis.gitnotifier.com/
+- Source code: https://github.com/gitnotifier-labs/ateliermojis
+- Built by: Gitnotifier Labs — https://gitnotifier.com/
+- Contact: hello@gitnotifier.com
+
+## About Gitnotifier
+
+[Gitnotifier](https://gitnotifier.com/) is the team behind AtelierMojis. Gitnotifier builds developer tools and utilities. AtelierMojis is one of their open-source side projects.
+

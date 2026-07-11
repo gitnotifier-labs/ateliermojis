@@ -25,9 +25,12 @@ export async function generateCollectorEmoji(
   sourceUrl: string,
   template: CollectorTemplate,
 ): Promise<Blob> {
-  const [emojiImage, templateImage] = await Promise.all([
+  const [emojiImage, templateImage, foregroundImage] = await Promise.all([
     loadImage(sourceUrl),
     loadImage(template.url),
+    template.foreground
+      ? loadImage(template.foreground)
+      : Promise.resolve(null),
   ]);
 
   const canvas = document.createElement("canvas");
@@ -61,6 +64,11 @@ export async function generateCollectorEmoji(
   const drawY = boxY + (boxH - drawHeight) / 2;
 
   ctx.drawImage(emojiImage, drawX, drawY, drawWidth, drawHeight);
+
+  // Draw the optional foreground layer on top (e.g. bubble border over the user image)
+  if (foregroundImage) {
+    ctx.drawImage(foregroundImage, 0, 0, canvas.width, canvas.height);
+  }
 
   return canvasToBlob(canvas);
 }
