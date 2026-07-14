@@ -2,9 +2,11 @@
 
 ![AtelierMojis logo](docs/images/logo.png)
 
-Turn images into slack emoji 🎨 _Made by the [GitNotifier team](https://www.gitnotifier.com)._
+Turn images into slack emoji 🎨
 
 Live website: https://ateliermojis.gitnotifier.com/
+
+_Made by the [GitNotifier team](https://www.gitnotifier.com)._
 
 ## Getting Started
 
