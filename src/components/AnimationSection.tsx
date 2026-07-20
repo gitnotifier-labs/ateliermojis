@@ -318,7 +318,7 @@ export function AnimationSection({
             <input
               type="range"
               min={0.1}
-              max={2}
+              max={3}
               step={0.1}
               value={intensity}
               onChange={(e) => setIntensity(Number(e.target.value))}

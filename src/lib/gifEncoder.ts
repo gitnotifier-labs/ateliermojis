@@ -111,7 +111,7 @@ export async function generateAnimatedGif(
   const fps = Math.max(1, Math.min(30, options.fps ?? DEFAULT_FPS));
   const intensity = Math.max(
     0.1,
-    Math.min(2, options.intensity ?? DEFAULT_INTENSITY),
+    Math.min(3, options.intensity ?? DEFAULT_INTENSITY),
   );
   // One full loop = 1 second worth of frames
   const frameCount = fps;
