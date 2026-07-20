@@ -9,6 +9,7 @@ import {
   ArrowLeftRight,
   ChevronsRight,
   Shield,
+  Eye,
   Loader2,
   ChevronDown,
 } from "lucide-react";
@@ -50,6 +51,12 @@ const animations: {
     label: "Thug Life",
     color: "text-slack-green",
   },
+  {
+    type: "lurk",
+    icon: Eye,
+    label: "Lurk",
+    color: "text-slack-yellow",
+  },
 ];
 
 interface AnimationSectionProps {
@@ -82,10 +89,12 @@ export function AnimationSection({
     slide: null,
     scroll: null,
     "thug-life": null,
+    lurk: null,
   });
   const animFrameRef = useRef<number>(0);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const thugLifeGlassesRef = useRef<HTMLImageElement | null>(null);
+  const brickWallRef = useRef<HTMLImageElement | null>(null);
   const optionsRef = useRef<AnimationOptions>({ fps: DEFAULT_FPS, intensity });
 
   // Keep optionsRef in sync without restarting the RAF loop
@@ -112,6 +121,12 @@ export function AnimationSection({
     tl.src = "/thug-life-glasses.png";
     tl.onload = () => {
       thugLifeGlassesRef.current = tl;
+    };
+
+    const bw = new Image();
+    bw.src = "/brick-wall.png";
+    bw.onload = () => {
+      brickWallRef.current = bw;
     };
   }, []);
 
@@ -189,6 +204,87 @@ export function AnimationSection({
               ctx.fillStyle = "#fff";
               ctx.fillText("THUG LIFE", size / 2, size - 4);
               ctx.globalAlpha = 1;
+            }
+          } else if (type === "lurk") {
+            // Preview: emoji slides in from right, peeks past brick wall, lurks, retreats
+            const wallImg = brickWallRef.current;
+            const WALL_X = Math.round((size * 2) / 3);
+            const EMOJI_SIZE = Math.round(size * 0.75);
+            const PEEK_SLIVER = 42;
+            const PEEK_CENTER_X = WALL_X - PEEK_SLIVER + EMOJI_SIZE / 2;
+            const LURK_CENTER_X = PEEK_CENTER_X - 20;
+            const HIDDEN_CENTER_X = size + EMOJI_SIZE / 2 + 4;
+            const EMOJI_CENTER_Y = size / 2;
+            const MAX_TILT = -(25 * Math.PI) / 180;
+            const T_IN_END = 0.18;
+            const T_NUDGE_END = 0.28;
+            const T_LURK_END = 0.72;
+            const T_OUT_END = 0.88;
+
+            const lurkCycle = (elapsed % 3) / 3;
+
+            const easeInOut = (x: number) =>
+              x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+
+            let emojiCx: number;
+            let tilt = 0;
+
+            if (lurkCycle < T_IN_END) {
+              const p = easeInOut(lurkCycle / T_IN_END);
+              emojiCx = HIDDEN_CENTER_X + (PEEK_CENTER_X - HIDDEN_CENTER_X) * p;
+            } else if (lurkCycle < T_NUDGE_END) {
+              const p = easeInOut(
+                (lurkCycle - T_IN_END) / (T_NUDGE_END - T_IN_END),
+              );
+              emojiCx = PEEK_CENTER_X + (LURK_CENTER_X - PEEK_CENTER_X) * p;
+            } else if (lurkCycle < T_LURK_END) {
+              emojiCx = LURK_CENTER_X;
+              const lurkT =
+                (lurkCycle - T_NUDGE_END) / (T_LURK_END - T_NUDGE_END);
+              tilt =
+                lurkT < 0.2
+                  ? MAX_TILT * easeInOut(lurkT / 0.2)
+                  : lurkT < 0.8
+                    ? MAX_TILT
+                    : MAX_TILT * easeInOut((1 - lurkT) / 0.2);
+            } else if (lurkCycle < T_OUT_END) {
+              const p = easeInOut(
+                (lurkCycle - T_LURK_END) / (T_OUT_END - T_LURK_END),
+              );
+              emojiCx = LURK_CENTER_X + (HIDDEN_CENTER_X - LURK_CENTER_X) * p;
+            } else {
+              emojiCx = HIDDEN_CENTER_X;
+            }
+
+            ctx.save();
+            ctx.translate(emojiCx, EMOJI_CENTER_Y);
+            ctx.rotate(tilt);
+            ctx.drawImage(
+              imgRef.current,
+              -EMOJI_SIZE / 2,
+              -EMOJI_SIZE / 2,
+              EMOJI_SIZE,
+              EMOJI_SIZE,
+            );
+            ctx.restore();
+
+            // Draw wall on top
+            const WALL_W = size - WALL_X;
+            if (wallImg) {
+              ctx.drawImage(
+                wallImg,
+                0,
+                0,
+                wallImg.naturalWidth,
+                wallImg.naturalHeight,
+                WALL_X,
+                0,
+                WALL_W,
+                size,
+              );
+            } else {
+              ctx.fillStyle = "#8B3A2A";
+              ctx.fillRect(WALL_X, 0, WALL_W, size);
             }
           } else {
             const { tx, ty, rotation, scale } = getAnimationTransform(
