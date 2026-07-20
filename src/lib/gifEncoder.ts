@@ -7,7 +7,9 @@ export type AnimationType =
   | "pulse"
   | "wobble"
   | "zoom"
-  | "slide";
+  | "slide"
+  | "scroll"
+  | "deal-with-it";
 
 export interface AnimationOptions {
   /** Frames per second (1–30, default 20) */
@@ -73,6 +75,20 @@ const transforms: Record<AnimationType, TransformFn> = {
     rotation: 0,
     scale: 1,
   }),
+  // Continuous horizontal scroll — uses tiling draw, tx cycles 0→SIZE
+  scroll: (t, _k) => ({
+    tx: t * SIZE,
+    ty: 0,
+    rotation: 0,
+    scale: 1,
+  }),
+  // Stub — preview shows image stationary; real GIF uses generateDealWithItGif
+  "deal-with-it": (_t, _k) => ({
+    tx: 0,
+    ty: 0,
+    rotation: 0,
+    scale: 1,
+  }),
 };
 
 export function getAnimationTransform(
@@ -88,6 +104,10 @@ export async function generateAnimatedGif(
   animation: AnimationType,
   options: AnimationOptions = {},
 ): Promise<Blob> {
+  if (animation === "deal-with-it") {
+    return generateDealWithItGif(imageUrl, options);
+  }
+
   const fps = Math.max(1, Math.min(30, options.fps ?? DEFAULT_FPS));
   const intensity = Math.max(
     0.1,
@@ -113,10 +133,21 @@ export async function generateAnimatedGif(
 
     ctx.clearRect(0, 0, SIZE, SIZE);
     ctx.save();
-    ctx.translate(SIZE / 2 + tx, SIZE / 2 + ty);
-    ctx.rotate(rotation);
-    ctx.scale(scale, scale);
-    ctx.drawImage(img, -SIZE / 2, -SIZE / 2, SIZE, SIZE);
+
+    if (animation === "scroll") {
+      // Tiling draw: shift = t * SIZE, draw image at (shift - SIZE) and shift
+      // so the image wraps seamlessly left-to-right
+      const shift = t * SIZE * intensity;
+      const x = ((shift % SIZE) + SIZE) % SIZE;
+      ctx.drawImage(img, x - SIZE, 0, SIZE, SIZE);
+      ctx.drawImage(img, x, 0, SIZE, SIZE);
+    } else {
+      ctx.translate(SIZE / 2 + tx, SIZE / 2 + ty);
+      ctx.rotate(rotation);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, -SIZE / 2, -SIZE / 2, SIZE, SIZE);
+    }
+
     ctx.restore();
 
     const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
