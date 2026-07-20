@@ -7,6 +7,8 @@ import {
   Waves,
   ZoomIn,
   ArrowLeftRight,
+  ChevronsRight,
+  Shield,
   Loader2,
   ChevronDown,
 } from "lucide-react";
@@ -35,6 +37,18 @@ const animations: {
     icon: ArrowLeftRight,
     label: "Slide",
     color: "text-slack-yellow",
+  },
+  {
+    type: "scroll",
+    icon: ChevronsRight,
+    label: "Scroll",
+    color: "text-slack-pink",
+  },
+  {
+    type: "thug-life",
+    icon: Shield,
+    label: "Thug Life",
+    color: "text-slack-green",
   },
 ];
 
@@ -66,9 +80,12 @@ export function AnimationSection({
     wobble: null,
     zoom: null,
     slide: null,
+    scroll: null,
+    "thug-life": null,
   });
   const animFrameRef = useRef<number>(0);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const thugLifeGlassesRef = useRef<HTMLImageElement | null>(null);
   const optionsRef = useRef<AnimationOptions>({ fps: DEFAULT_FPS, intensity });
 
   // Keep optionsRef in sync without restarting the RAF loop
@@ -88,6 +105,15 @@ export function AnimationSection({
       imgRef.current = img;
     };
   }, [processedUrl]);
+
+  // Load static overlay images once on mount
+  useEffect(() => {
+    const tl = new Image();
+    tl.src = "/thug-life-glasses.png";
+    tl.onload = () => {
+      thugLifeGlassesRef.current = tl;
+    };
+  }, []);
 
   // Single RAF loop animating all canvases
   useEffect(() => {
@@ -114,14 +140,68 @@ export function AnimationSection({
           const ctx = canvas.getContext("2d");
           if (!ctx) continue;
 
-          const { tx, ty, rotation, scale } = getAnimationTransform(type, t, k);
-
           ctx.clearRect(0, 0, size, size);
           ctx.save();
-          ctx.translate(size / 2 + tx, size / 2 + ty);
-          ctx.rotate(rotation);
-          ctx.scale(scale, scale);
-          ctx.drawImage(imgRef.current, -size / 2, -size / 2, size, size);
+
+          if (type === "scroll") {
+            // Seamless tiling horizontal scroll
+            const shift = (((t * size * k) % size) + size) % size;
+            ctx.drawImage(imgRef.current, shift - size, 0, size, size);
+            ctx.drawImage(imgRef.current, shift, 0, size, size);
+          } else if (type === "thug-life") {
+            // Preview: base image + falling glasses overlay (2-second cycle)
+            const glassesImg = thugLifeGlassesRef.current;
+            const cycle = (elapsed % 2) / 2;
+            ctx.drawImage(imgRef.current, 0, 0, size, size);
+            const targetY = (size * 2) / 3;
+            const startY = -24;
+            const fallEndT = 0.5;
+            const progress = Math.min(cycle / fallEndT, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const glassesY = startY + (targetY - startY) * eased;
+            if (glassesImg) {
+              const glassesW = size * 0.7;
+              const glassesH =
+                glassesW * (glassesImg.naturalHeight / glassesImg.naturalWidth);
+              ctx.save();
+              ctx.translate(size / 2, glassesY);
+              ctx.scale(-1, 1);
+              ctx.drawImage(
+                glassesImg,
+                -glassesW / 2,
+                -glassesH / 2,
+                glassesW,
+                glassesH,
+              );
+              ctx.restore();
+            } else {
+              drawSunglassesPreview(ctx, size / 2, glassesY, size);
+            }
+            if (cycle >= fallEndT) {
+              const textAlpha = Math.min((cycle - fallEndT) / 0.1, 1);
+              ctx.globalAlpha = textAlpha;
+              ctx.font = `bold ${Math.round(size * 0.09)}px Impact, Arial Black, sans-serif`;
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+              ctx.strokeStyle = "#000";
+              ctx.lineWidth = 3;
+              ctx.strokeText("THUG LIFE", size / 2, size - 4);
+              ctx.fillStyle = "#fff";
+              ctx.fillText("THUG LIFE", size / 2, size - 4);
+              ctx.globalAlpha = 1;
+            }
+          } else {
+            const { tx, ty, rotation, scale } = getAnimationTransform(
+              type,
+              t,
+              k,
+            );
+            ctx.translate(size / 2 + tx, size / 2 + ty);
+            ctx.rotate(rotation);
+            ctx.scale(scale, scale);
+            ctx.drawImage(imgRef.current, -size / 2, -size / 2, size, size);
+          }
+
           ctx.restore();
         }
       }
@@ -249,4 +329,81 @@ export function AnimationSection({
       </div>
     </motion.div>
   );
+}
+
+/** Mirrors the sunglasses drawing logic from gifEncoder for the live preview. */
+function drawSunglassesPreview(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  size: number,
+): void {
+  const lensW = size * 0.22;
+  const lensH = size * 0.11;
+  const lensR = lensH * 0.45;
+  const gap = size * 0.06;
+  const frameThickness = 2;
+
+  const leftX = cx - gap / 2 - lensW;
+  const rightX = cx + gap / 2;
+  const lensY = cy - lensH / 2;
+
+  ctx.save();
+
+  ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+  previewRoundRect(ctx, leftX, lensY, lensW, lensH, lensR);
+  ctx.fill();
+  previewRoundRect(ctx, rightX, lensY, lensW, lensH, lensR);
+  ctx.fill();
+
+  ctx.strokeStyle = "#FFD700";
+  ctx.lineWidth = frameThickness;
+  previewRoundRect(ctx, leftX, lensY, lensW, lensH, lensR);
+  ctx.stroke();
+  previewRoundRect(ctx, rightX, lensY, lensW, lensH, lensR);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(leftX + lensW, cy);
+  ctx.lineTo(rightX, cy);
+  ctx.strokeStyle = "#FFD700";
+  ctx.lineWidth = frameThickness;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(leftX, cy);
+  ctx.lineTo(leftX - size * 0.08, cy - size * 0.02);
+  ctx.strokeStyle = "#FFD700";
+  ctx.lineWidth = frameThickness;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(rightX + lensW, cy);
+  ctx.lineTo(rightX + lensW + size * 0.08, cy - size * 0.02);
+  ctx.strokeStyle = "#FFD700";
+  ctx.lineWidth = frameThickness;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function previewRoundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+): void {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }

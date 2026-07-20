@@ -9,7 +9,7 @@ export type AnimationType =
   | "zoom"
   | "slide"
   | "scroll"
-  | "deal-with-it";
+  | "thug-life";
 
 export interface AnimationOptions {
   /** Frames per second (1–30, default 20) */
@@ -82,8 +82,8 @@ const transforms: Record<AnimationType, TransformFn> = {
     rotation: 0,
     scale: 1,
   }),
-  // Stub — preview shows image stationary; real GIF uses generateDealWithItGif
-  "deal-with-it": (_t, _k) => ({
+  // Stub — preview shows image stationary; real GIF uses generateThugLifeGif
+  "thug-life": (_t, _k) => ({
     tx: 0,
     ty: 0,
     rotation: 0,
@@ -104,8 +104,8 @@ export async function generateAnimatedGif(
   animation: AnimationType,
   options: AnimationOptions = {},
 ): Promise<Blob> {
-  if (animation === "deal-with-it") {
-    return generateDealWithItGif(imageUrl, options);
+  if (animation === "thug-life") {
+    return generateThugLifeGif(imageUrl, options);
   }
 
   const fps = Math.max(1, Math.min(30, options.fps ?? DEFAULT_FPS));
@@ -149,6 +149,78 @@ export async function generateAnimatedGif(
     }
 
     ctx.restore();
+
+    const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
+    const palette = quantize(imageData.data, 256);
+    const index = applyPalette(imageData.data, palette);
+
+    gif.writeFrame(index, SIZE, SIZE, {
+      palette,
+      delay: frameDelay,
+      transparent: true,
+      dispose: 2,
+    });
+  }
+
+  gif.finish();
+  return new Blob([gif.bytes()], { type: "image/gif" });
+}
+
+async function generateThugLifeGif(
+  imageUrl: string,
+  options: AnimationOptions = {},
+): Promise<Blob> {
+  const fps = Math.max(1, Math.min(30, options.fps ?? DEFAULT_FPS));
+  const frameCount = fps * 2;
+  const frameDelay = Math.round(1000 / fps);
+
+  const [img, glassesImg] = await Promise.all([
+    loadImg(imageUrl),
+    loadImg("/thug-life-glasses.png"),
+  ]);
+  const gif = GIFEncoder();
+
+  const targetY = (SIZE * 2) / 3;
+  const startY = -24;
+  const fallEndT = 0.5;
+
+  const glassesW = SIZE * 0.7;
+  const glassesH =
+    glassesW * (glassesImg.naturalHeight / glassesImg.naturalWidth);
+
+  for (let i = 0; i < frameCount; i++) {
+    const t = i / frameCount;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+    const ctx = canvas.getContext("2d")!;
+
+    ctx.drawImage(img, 0, 0, SIZE, SIZE);
+
+    const progress = Math.min(t / fallEndT, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const glassesY = startY + (targetY - startY) * eased;
+
+    ctx.save();
+    ctx.translate(SIZE / 2, glassesY);
+    ctx.scale(-1, 1);
+    ctx.drawImage(glassesImg, -glassesW / 2, -glassesH / 2, glassesW, glassesH);
+    ctx.restore();
+
+    if (t >= fallEndT) {
+      const textAlpha = Math.min((t - fallEndT) / 0.1, 1);
+      ctx.globalAlpha = textAlpha;
+      ctx.font = `bold ${Math.round(SIZE * 0.09)}px Impact, Arial Black, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 3;
+      ctx.strokeText("THUG LIFE", SIZE / 2, SIZE - 4);
+      ctx.fillStyle = "#fff";
+      ctx.fillText("THUG LIFE", SIZE / 2, SIZE - 4);
+      ctx.globalAlpha = 1;
+    }
 
     const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
     const palette = quantize(imageData.data, 256);
