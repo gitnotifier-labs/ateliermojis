@@ -28,7 +28,7 @@
     "react-dom": "^19.2.7",
     "react-image-crop": "^11.1.2",
     "react-router": "^7.18.1",
-    "simple-icons": "^16.26.0",
+    "simple-icons": "^16.27.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -45,7 +45,7 @@
     "lint-staged": "^16.4.0",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
-    "postcss": "^8.5.19",
+    "postcss": "^8.5.20",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^8.1.5",
