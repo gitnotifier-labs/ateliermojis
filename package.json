@@ -28,7 +28,7 @@
     "react-dom": "^19.2.8",
     "react-image-crop": "^11.1.2",
     "react-router": "^8.3.0",
-    "simple-icons": "^16.27.1",
+    "simple-icons": "^16.28.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
