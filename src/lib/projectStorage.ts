@@ -22,7 +22,7 @@ function getDefaultName(name: string): string {
 function getDefaultSettings(fileName: string): ProjectSettings {
   return {
     downloadName: getDefaultName(fileName),
-    squareMode: "pad",
+    squareMode: "crop",
     landscapeAlign: "center",
     step: "done",
   };
@@ -77,9 +77,7 @@ function normalizeRecord(value: unknown): ProjectRecord | null {
           ? rawSettings.downloadName
           : defaults.downloadName,
       squareMode:
-        rawSettings.squareMode === "crop" || rawSettings.squareMode === "pad"
-          ? rawSettings.squareMode
-          : defaults.squareMode,
+        rawSettings.squareMode === "crop" ? "crop" : defaults.squareMode,
       landscapeAlign:
         rawSettings.landscapeAlign === "top" ||
         rawSettings.landscapeAlign === "center" ||

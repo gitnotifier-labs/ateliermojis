@@ -208,7 +208,7 @@ export default function Index() {
 
   const handleCropComplete = async (
     canvas: HTMLCanvasElement,
-    next: Pick<ProjectSettings, "squareMode" | "landscapeAlign" | "crop">,
+    next: Pick<ProjectSettings, "crop">,
   ) => {
     const result = await canvasToProcessed(canvas);
     setProcessed((prev) => {
@@ -217,8 +217,7 @@ export default function Index() {
     });
     setStep("done");
     await updateCurrentProjectSettings({
-      squareMode: next.squareMode,
-      landscapeAlign: next.landscapeAlign,
+      squareMode: "crop",
       crop: next.crop,
       step: "done",
     });
@@ -377,8 +376,6 @@ export default function Index() {
         {step === "crop" && file && fileUrl && projectSettings && (
           <CropEditor
             imageUrl={fileUrl}
-            initialMode={projectSettings.squareMode}
-            initialLandscapeAlign={projectSettings.landscapeAlign}
             initialCrop={projectSettings.crop}
             onCropComplete={handleCropComplete}
             onBack={handleBackFromCrop}

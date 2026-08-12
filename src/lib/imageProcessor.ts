@@ -144,7 +144,7 @@ export async function canvasToProcessed(
 
 export async function processImageWithProjectSettings(
   file: File,
-  settings: Pick<ProjectSettings, "squareMode" | "landscapeAlign" | "crop">,
+  settings: Pick<ProjectSettings, "crop">,
 ): Promise<ProcessedImage> {
   const img = await loadImage(file);
   const canvas = document.createElement("canvas");
@@ -153,28 +153,6 @@ export async function processImageWithProjectSettings(
   const ctx = canvas.getContext("2d")!;
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-
-  if (settings.squareMode === "pad") {
-    const isLandscape = img.naturalWidth > img.naturalHeight;
-
-    if (isLandscape) {
-      const scaledHeight = (img.naturalHeight / img.naturalWidth) * TARGET_SIZE;
-      const y =
-        settings.landscapeAlign === "top"
-          ? 0
-          : settings.landscapeAlign === "bottom"
-            ? TARGET_SIZE - scaledHeight
-            : (TARGET_SIZE - scaledHeight) / 2;
-
-      ctx.drawImage(img, 0, y, TARGET_SIZE, scaledHeight);
-    } else {
-      const scaledWidth = (img.naturalWidth / img.naturalHeight) * TARGET_SIZE;
-      const x = (TARGET_SIZE - scaledWidth) / 2;
-      ctx.drawImage(img, x, 0, scaledWidth, TARGET_SIZE);
-    }
-
-    return canvasToProcessed(canvas);
-  }
 
   const crop = normalizeCrop(
     img.naturalWidth,
