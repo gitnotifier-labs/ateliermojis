@@ -23,7 +23,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
     "gifenc": "^1.0.3",
-    "lucide-react": "^1.32.0",
+    "lucide-react": "^1.33.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-image-crop": "^11.1.2",
@@ -33,13 +33,13 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.53.0",
+    "@cloudflare/vite-plugin": "^1.53.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lint-staged": "^16.4.0",
@@ -48,9 +48,9 @@
     "postcss": "^8.5.26",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "vitest": "^4.1.11",
-    "wrangler": "^4.124.0"
+    "wrangler": "^4.125.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,json5,css,scss,less,md,mdx,html,yml,yaml,toml,gql,graphql}": "oxfmt --no-error-on-unmatched-pattern"
