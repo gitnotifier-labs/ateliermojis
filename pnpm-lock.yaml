@@ -24,8 +24,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       lucide-react:
-        specifier: ^1.35.0
-        version: 1.35.0(react@19.2.8)
+        specifier: ^1.37.0
+        version: 1.37.0(react@19.2.8)
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -39,8 +39,8 @@ importers:
         specifier: ^8.3.1
         version: 8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       simple-icons:
-        specifier: ^16.28.0
-        version: 16.28.0
+        specifier: ^16.29.0
+        version: 16.29.0
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
@@ -1479,8 +1479,8 @@ packages:
     resolution: {integrity: sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==}
     engines: {node: 20 || >=22}
 
-  lucide-react@1.35.0:
-    resolution: {integrity: sha512-yXCCWxGFYT6bLIPYC4SY6fPQPRs/d797rRIue+J9XP2Td6vQvD53gaQRBCnIVT1kTQRHtAtxlfOQNWAuIF8ELg==}
+  lucide-react@1.37.0:
+    resolution: {integrity: sha512-LPsB4rD1TD6wZu1djKOf9vUnS1jTNaHbolXebXDgiTdb6jeA1agIJhJsIybCmjKmQClcOaal1o1OaiYahEftyQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -1638,8 +1638,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-icons@16.28.0:
-    resolution: {integrity: sha512-sQPR5AtK/ijRjou7zw7mlLp08oB6FH7i0lOy5XJ2zp9mJs/yejgiOn7KvQoe2q4YJIx6VmgUSW5AOefebPt5kg==}
+  simple-icons@16.29.0:
+    resolution: {integrity: sha512-4H94f5ZgcCcgJroc902TFlFdgPu2IU2eD7+WebN2Z14xKYrKHeJ4UQcZwzgSuH4Rgzw+jp7sbHl40NefuIEYsg==}
     engines: {node: '>=0.12.18'}
 
   slice-ansi@7.1.2:
@@ -2879,7 +2879,7 @@ snapshots:
 
   lru-cache@11.5.2: {}
 
-  lucide-react@1.35.0(react@19.2.8):
+  lucide-react@1.37.0(react@19.2.8):
     dependencies:
       react: 19.2.8
 
@@ -3082,7 +3082,7 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-icons@16.28.0: {}
+  simple-icons@16.29.0: {}
 
   slice-ansi@7.1.2:
     dependencies:
