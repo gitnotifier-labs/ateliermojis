@@ -18,7 +18,7 @@
     "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.4.0",
+    "@radix-ui/react-slot": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
@@ -45,7 +45,7 @@
     "lint-staged": "^16.4.0",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
-    "postcss": "^8.5.29",
+    "postcss": "^8.5.30",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^8.3.4",
