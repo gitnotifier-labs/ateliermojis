@@ -23,7 +23,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
     "gifenc": "^1.0.3",
-    "lucide-react": "^1.62.0",
+    "lucide-react": "^1.65.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-image-crop": "^11.1.2",
@@ -33,7 +33,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.65.0",
+    "@cloudflare/vite-plugin": "^1.66.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^24.19.2",
@@ -50,7 +50,7 @@
     "typescript": "^6.0.3",
     "vite": "^8.3.5",
     "vitest": "^4.1.12",
-    "wrangler": "^4.154.0"
+    "wrangler": "^4.156.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,json5,css,scss,less,md,mdx,html,yml,yaml,toml,gql,graphql}": "oxfmt --no-error-on-unmatched-pattern"
